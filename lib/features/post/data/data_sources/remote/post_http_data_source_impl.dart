@@ -5,16 +5,12 @@ import 'package:red_social_prueba/features/post/data/data_sources/remote/post_re
 import 'package:red_social_prueba/features/post/data/models/post_model.dart';
 
 class PostHttpDataSourceImpl implements PostRemoteDataSource {
-  final http.Client client;
-
-  PostHttpDataSourceImpl({required this.client});
-
   final String baseUrl = 'https://dummyjson.com/posts';
 
   @override
   Future<List<PostModel>> getAllPost({int limit = 10, int skip = 0}) async {
     try {
-      final response = await client.get(
+      final response = await http.get(
         Uri.parse('$baseUrl?limit=$limit&skip=$skip'),
       );
 
@@ -34,7 +30,7 @@ class PostHttpDataSourceImpl implements PostRemoteDataSource {
   @override
   Future<PostModel> getPost(int id) async {
     try {
-      final response = await client.get(Uri.parse('$baseUrl/$id'));
+      final response = await http.get(Uri.parse('$baseUrl/$id'));
 
       if (response.statusCode == 200) {
         final jsonData = json.decode(response.body);
