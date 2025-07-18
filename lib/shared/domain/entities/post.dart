@@ -16,7 +16,6 @@ class Post {
     required this.views,
     required this.userId,
   });
-
 }
 
 class Reactions {
@@ -24,8 +23,7 @@ class Reactions {
   int dislikes;
 
   Reactions({
-    required this.likes,
-    required this.dislikes,
+    required this.likes,     
+    required this.dislikes,  
   });
-
 }
