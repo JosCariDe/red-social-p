@@ -15,7 +15,7 @@ class PostModel extends Post {
   factory PostModel.fromJson(Map<String, dynamic> json) {
     return PostModel(
       id: json['id'],
-      title: json['title'], 
+      title: json['title'],
       body: json['body'],
       tags: List<String>.from(json['tags']),
       reactions: ReactionsModel.fromJson(json['reactions']),
@@ -30,7 +30,7 @@ class PostModel extends Post {
       'title': title,
       'body': body,
       'tags': tags,
-      'reactions': (reactions as ReactionsModel).toJson(), 
+      'reactions': (reactions as ReactionsModel).toJson(),
       'views': views,
       'userId': userId,
     };
@@ -42,9 +42,12 @@ class PostModel extends Post {
       title: entity.title,
       body: entity.body,
       tags: entity.tags,
-      reactions: entity.reactions is ReactionsModel 
-                   ? entity.reactions 
-                   : ReactionsModel(likes: entity.reactions.likes, dislikes: entity.reactions.dislikes),
+      reactions: entity.reactions is ReactionsModel
+          ? entity.reactions
+          : ReactionsModel(
+              likes: entity.reactions.likes,
+              dislikes: entity.reactions.dislikes,
+            ),
       views: entity.views,
       userId: entity.userId,
     );
