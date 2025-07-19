@@ -1,13 +1,15 @@
-class Post {
-  int id;
-  String title;
-  String body;
-  List<String> tags;
-  Reactions reactions;
-  int views;
-  int userId;
+import 'package:equatable/equatable.dart';
 
-  Post({
+class Post extends Equatable {
+  final int id;
+  final String title;
+  final String body;
+  final List<String> tags;
+  final Reactions reactions;
+  final int views;
+  final int userId;
+
+  const Post({
     required this.id,
     required this.title,
     required this.body,
@@ -16,6 +18,9 @@ class Post {
     required this.views,
     required this.userId,
   });
+  
+  @override
+  List<Object?> get props => [id, title, body, tags, reactions, views, userId];
 }
 
 class Reactions {
