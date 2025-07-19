@@ -8,7 +8,7 @@ class PostHttpDataSourceImpl implements PostRemoteDataSource {
   final String baseUrl = 'https://dummyjson.com/posts';
 
   @override
-  Future<List<PostModel>> getAllPost({int limit = 10, int skip = 0}) async {
+  Future<List<PostModel>> getAllPostRemote({int limit = 10, int skip = 0}) async {
     try {
       final response = await http.get(
         Uri.parse('$baseUrl?limit=$limit&skip=$skip'),
@@ -28,7 +28,7 @@ class PostHttpDataSourceImpl implements PostRemoteDataSource {
   }
 
   @override
-  Future<PostModel> getPost(int id) async {
+  Future<PostModel> getPostRemote(int id) async {
     try {
       final response = await http.get(Uri.parse('$baseUrl/$id'));
 
