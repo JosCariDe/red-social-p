@@ -18,7 +18,9 @@ class PostRepositoryImpl implements PostRepository {
   });
 
   //TODO Función privada para manejar errores y maneja si devolver Right(result) o Left(Error)
-  Future<Either<Failure, T>> _handleRequest<T>(Future<T> Function() request) async {
+  Future<Either<Failure, T>> _handleRequest<T>(
+    Future<T> Function() request,
+  ) async {
     try {
       final result = await request();
       return Right(result);
@@ -38,8 +40,25 @@ class PostRepositoryImpl implements PostRepository {
   Future<Either<Failure, List<Post>>> getAllPost({int limit = 10, int skip = 0}) {
     return _handleRequest(() async {
       final localPosts = await postLocalDataSource.getAllPostLocal();
-      final remotePosts = await postRemoteDataSource.getAllPostRemote(limit: limit,skip: skip);
-      return [...localPosts, ...remotePosts];
+      final remotePosts = await postRemoteDataSource.getAllPostRemote(limit: limit, skip: skip);
+
+      //! Cuando se guarda un post de la api remota, entonces con esto aseguramos que no
+      //! se repita el post al llamar este metodo del repositorio, quedará 
+
+      //? Obtener IDs de posts locales
+      final localPostIds = localPosts.map((post) => post.id).toSet();
+
+      //? Filtrar posts remotos que no esten en locales
+      final uniqueRemotePosts = remotePosts
+          .where((remotePost) => !localPostIds.contains(remotePost.id))
+          .toList();
+
+      final mergedPosts = [...localPosts, ...uniqueRemotePosts];
+
+      //? Ordenar de mayor a menor ID
+      mergedPosts.sort((a, b) => b.id.compareTo(a.id));
+
+      return mergedPosts;
     });
   }
 
@@ -68,10 +87,9 @@ class PostRepositoryImpl implements PostRepository {
       }
     });
   }
-  
-  @override
-  Future<Either<Failure, bool>> savePostLocal(Post post) async{
 
+  @override
+  Future<Either<Failure, bool>> savePostLocal(Post post) async {
     return _handleRequest(() async {
       //final count = await postRemoteDataSource.getCountPostRemote();
       return await postLocalDataSource.savePostLocal(post);
