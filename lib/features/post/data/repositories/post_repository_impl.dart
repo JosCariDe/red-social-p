@@ -35,10 +35,10 @@ class PostRepositoryImpl implements PostRepository {
   }
 
   @override
-  Future<Either<Failure, List<Post>>> getAllPost() {
+  Future<Either<Failure, List<Post>>> getAllPost({int limit = 10, int skip = 0}) {
     return _handleRequest(() async {
       final localPosts = await postLocalDataSource.getAllPostLocal();
-      final remotePosts = await postRemoteDataSource.getAllPostRemote();
+      final remotePosts = await postRemoteDataSource.getAllPostRemote(limit: limit,skip: skip);
       return [...localPosts, ...remotePosts];
     });
   }
@@ -78,4 +78,3 @@ class PostRepositoryImpl implements PostRepository {
     });
   }
 }
-

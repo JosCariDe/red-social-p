@@ -8,7 +8,7 @@ class GetAllPostUseCase {
 
   GetAllPostUseCase({required this.postRepository});
 
-  Future<Either<Failure, List<Post>>> call() {
-    return postRepository.getAllPost();
+  Future<Either<Failure, List<Post>>> call({int limit = 10, int skip = 0}) {
+    return postRepository.getAllPost(limit: limit, skip: skip);
   }
 }
