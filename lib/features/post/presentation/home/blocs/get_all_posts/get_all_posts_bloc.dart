@@ -16,6 +16,7 @@ class GetAllPostsBloc extends Bloc<GetAllPostsEvent, GetAllPostsState> {
     Emitter<GetAllPostsState> emit,
   ) async {
     final currentState = state;
+    //? Si llegó al limite de post de la api
     if (currentState is GetAllPostsSuccess && currentState.limitReached) {
       return;
     }
