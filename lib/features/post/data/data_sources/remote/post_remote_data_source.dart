@@ -5,5 +5,6 @@ abstract class PostRemoteDataSource {
 
   Future<PostModel> getPost(int id);
   Future<List<PostModel>> getAllPost();
+  Future<int> getCountPostRemote();
 
 }

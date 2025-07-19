@@ -6,6 +6,7 @@ abstract class PostRepository {
 
   Future<Either<Failure, Post>> getOnePost(int id);
   Future<Either<Failure, List<Post>>> getAllPost();
+  Future<Either<Failure, int>> getCountPosts();
   
 
 }

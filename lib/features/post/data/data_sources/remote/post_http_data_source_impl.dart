@@ -42,4 +42,22 @@ class PostHttpDataSourceImpl implements PostRemoteDataSource {
       throw ServerFailure();
     }
   }
+  
+  @override
+  Future<int> getCountPostRemote() async {
+    try {
+      final response = await http.get(Uri.parse('$baseUrl'));
+
+      if (response.statusCode == 200) {
+        final jsonData = json.decode(response.body);
+        final int postCount = jsonData['total'];
+
+        return postCount;
+      } else {
+        throw ServerFailure();
+      }
+    } catch (e) {
+      throw ServerFailure();
+    }
+  }
 }
