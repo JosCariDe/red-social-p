@@ -17,102 +17,56 @@ class PostRepositoryImpl implements PostRepository {
     required this.postRemoteDataSource,
   });
 
-  @override
-  Future<Either<Failure, List<Post>>> getAllPost() async {
+  //TODO Función privada para manejar errores y maneja si devolver Right(result) o Left(Error)
+  Future<Either<Failure, T>> _handleRequest<T>(Future<T> Function() request) async {
     try {
-      final List<Post> localPosts = await postLocalDataSource.getAllPostLocal();
-      final List<Post> remotePosts = await postRemoteDataSource
-          .getAllPostRemote();
-
-      final allPosts = [...localPosts, ...remotePosts];
-      return Right(allPosts); //? Lado Derecho es que salió bien los llamados
+      final result = await request();
+      return Right(result);
     } on HttpException catch (error) {
-      //? Error en el remoto DataSource
-      debugPrint('Error HTTP remoto: ${error.toString()}');
+      debugPrint('Error HTTP remoto: $error');
       return Left(ServerFailure());
     } on LocalFailure catch (error) {
-      //? Error en el Local DataSource
-      debugPrint('Error local DB: ${error.toString()}');
+      debugPrint('Error local DB: $error');
       return Left(LocalFailure());
     } catch (error) {
-      //? Cualquier otro error
-      debugPrint('Error inesperado en el repositorio: ${error.toString()}');
+      debugPrint('Error inesperado: $error');
       return Left(ServerFailure());
     }
   }
 
   @override
-  Future<Either<Failure, List<Post>>> getAllPostsByIdUserLocal(int idUser) async {
-    try {
-      final List<Post> localPosts = await postLocalDataSource.getAllPostsLocalByIdUser(idUser);
-  
-
-      final allPosts = [...localPosts];
-      return Right(allPosts); //? Lado Derecho es que salió bien los llamados
-    } on HttpException catch (error) {
-      //? Error en el remoto DataSource
-      debugPrint('Error HTTP remoto: ${error.toString()}');
-      return Left(ServerFailure());
-    } on LocalFailure catch (error) {
-      //? Error en el Local DataSource
-      debugPrint('Error local DB: ${error.toString()}');
-      return Left(LocalFailure());
-    } catch (error) {
-      //? Cualquier otro error
-      debugPrint('Error inesperado en el repositorio: ${error.toString()}');
-      return Left(ServerFailure());
-    }
+  Future<Either<Failure, List<Post>>> getAllPost() {
+    return _handleRequest(() async {
+      final localPosts = await postLocalDataSource.getAllPostLocal();
+      final remotePosts = await postRemoteDataSource.getAllPostRemote();
+      return [...localPosts, ...remotePosts];
+    });
   }
 
   @override
-  Future<Either<Failure, int>> getCountPosts() async {
-    try {
-      final int counPosts = await postRemoteDataSource.getCountPostRemote();
-  
-
-      return Right(counPosts); //? Lado Derecho es que salió bien los llamados
-    } on HttpException catch (error) {
-      //? Error en el remoto DataSource
-      debugPrint('Error HTTP remoto: ${error.toString()}');
-      return Left(ServerFailure());
-    } on LocalFailure catch (error) {
-      //? Error en el Local DataSource
-      debugPrint('Error local DB: ${error.toString()}');
-      return Left(LocalFailure());
-    } catch (error) {
-      //? Cualquier otro error
-      debugPrint('Error inesperado en el repositorio: ${error.toString()}');
-      return Left(ServerFailure());
-    }
+  Future<Either<Failure, List<Post>>> getAllPostsByIdUserLocal(int idUser) {
+    return _handleRequest(() async {
+      return await postLocalDataSource.getAllPostsLocalByIdUser(idUser);
+    });
   }
 
   @override
-  Future<Either<Failure, Post>> getOnePostById(int idPost)async {
-    try {
-      final Post post;
-      //? Si el id es mayor al count de Posts del remote, entonces hace la busqueda en el local
-      if (idPost > await postRemoteDataSource.getCountPostRemote()){
-        post = await postLocalDataSource.getOnePostLocalById(idPost);
-      }else {
-        post = await postRemoteDataSource.getPostRemoteById(idPost);
+  Future<Either<Failure, int>> getCountPosts() {
+    return _handleRequest(() async {
+      return await postRemoteDataSource.getCountPostRemote();
+    });
+  }
+
+  @override
+  Future<Either<Failure, Post>> getOnePostById(int idPost) {
+    return _handleRequest(() async {
+      final count = await postRemoteDataSource.getCountPostRemote();
+      if (idPost > count) {
+        return await postLocalDataSource.getOnePostLocalById(idPost);
+      } else {
+        return await postRemoteDataSource.getPostRemoteById(idPost);
       }
-  
-      return Right(post); //? Lado Derecho es que salió bien los llamados
-
-    } on HttpException catch (error) {
-      //? Error en el remoto DataSource
-      debugPrint('Error HTTP remoto: ${error.toString()}');
-      return Left(ServerFailure());
-    } on LocalFailure catch (error) {
-      //? Error en el Local DataSource
-      debugPrint('Error local DB: ${error.toString()}');
-      return Left(LocalFailure());
-    } catch (error) {
-      //? Cualquier otro error
-      debugPrint('Error inesperado en el repositorio: ${error.toString()}');
-      return Left(ServerFailure());
-    }
+    });
   }
-  
-
 }
+
