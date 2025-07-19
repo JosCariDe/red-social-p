@@ -28,9 +28,9 @@ class PostHttpDataSourceImpl implements PostRemoteDataSource {
   }
 
   @override
-  Future<PostModel> getPostRemote(int id) async {
+  Future<PostModel> getPostRemoteById(int idPost) async {
     try {
-      final response = await http.get(Uri.parse('$baseUrl/$id'));
+      final response = await http.get(Uri.parse('$baseUrl/$idPost'));
 
       if (response.statusCode == 200) {
         final jsonData = json.decode(response.body);
