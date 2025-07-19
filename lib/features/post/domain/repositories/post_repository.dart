@@ -4,9 +4,9 @@ import 'package:red_social_prueba/shared/domain/entities/post.dart'; // Post es 
 
 abstract class PostRepository {
 
-  Future<Either<Failure, Post>> getOnePost(int id);
+  Future<Either<Failure, Post>> getOnePostById(int idPost);
   Future<Either<Failure, List<Post>>> getAllPost();
   Future<Either<Failure, int>> getCountPosts();
-  Future<Either<Failure, List<Post>>> getAllPostsByIdUser();
+  Future<Either<Failure, List<Post>>> getAllPostsByIdUserLocal(int idUser);
 
 }
