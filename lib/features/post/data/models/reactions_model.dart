@@ -1,5 +1,5 @@
 
-import 'package:red_social_prueba/shared/domain/entities/post.dart';
+import 'package:red_social_prueba/features/post/domain/entities/post.dart';
 
 class ReactionsModel extends Reactions {
   ReactionsModel({

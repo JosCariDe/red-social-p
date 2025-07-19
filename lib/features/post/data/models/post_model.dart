@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:red_social_prueba/features/post/data/models/reactions_model.dart';
-import 'package:red_social_prueba/shared/domain/entities/post.dart';
+import 'package:red_social_prueba/features/post/domain/entities/post.dart';
 
 class PostModel extends Post {
   PostModel({

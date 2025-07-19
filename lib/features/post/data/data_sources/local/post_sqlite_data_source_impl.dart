@@ -3,8 +3,9 @@ import 'package:red_social_prueba/core/db/local/posts_database.dart';
 import 'package:red_social_prueba/core/errors/failure.dart';
 import 'package:red_social_prueba/features/post/data/data_sources/local/post_local_data_source.dart';
 import 'package:red_social_prueba/features/post/data/models/post_model.dart';
-import 'package:red_social_prueba/shared/domain/entities/post.dart';
 import 'dart:async';
+
+import 'package:red_social_prueba/features/post/domain/entities/post.dart';
 
 class PostSqliteDataSourceImpl implements PostLocalDataSource {
   final PostsDatabase database;
