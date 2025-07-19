@@ -1,4 +1,3 @@
-import 'package:red_social_prueba/features/post/data/models/post_model.dart';
 import 'package:sqflite/sqflite.dart';
 
 class PostsDatabase {
