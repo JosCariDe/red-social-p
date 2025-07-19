@@ -1,5 +1,5 @@
 
 import 'dart:math';
 
-int get randomPostId => Random().nextInt(100) + 1;
+int get randomPostId => Random().nextInt(251) + 1;
 
