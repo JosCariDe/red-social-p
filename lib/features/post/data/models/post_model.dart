@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:red_social_prueba/features/post/data/models/reactions_model.dart';
 import 'package:red_social_prueba/shared/domain/entities/post.dart';
 
@@ -21,6 +23,36 @@ class PostModel extends Post {
       reactions: ReactionsModel.fromJson(json['reactions']),
       views: json['views'],
       userId: json['userId'],
+    );
+  }
+
+  /// Para guardar en SQLite
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'title': title,
+      'body': body,
+      'tags': jsonEncode(tags), // Convertimos lista a JSON string
+      'likes': reactions.likes,
+      'dislikes': reactions.dislikes,
+      'views': views,
+      'userId': userId,
+    };
+  }
+
+  /// Para leer desde SQLite
+  factory PostModel.fromMap(Map<String, dynamic> map) {
+    return PostModel(
+      id: map['id'],
+      title: map['title'],
+      body: map['body'],
+      tags: List<String>.from(jsonDecode(map['tags'])),
+      reactions: ReactionsModel(
+        likes: map['likes'],
+        dislikes: map['dislikes'],
+      ),
+      views: map['views'],
+      userId: map['userId'],
     );
   }
 
