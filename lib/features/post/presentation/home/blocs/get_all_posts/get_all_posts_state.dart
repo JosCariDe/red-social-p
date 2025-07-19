@@ -14,25 +14,20 @@ class GetAllPostsLoading extends GetAllPostsState {}
 
 class GetAllPostsSuccess extends GetAllPostsState {
   final List<Post> posts;
-  final bool limitReached; //? Bandera para saber cuando alcanza el limite
-                           //? La cantidad de post de la api es de 251, por le momento
+  final bool limitReached;
+
   const GetAllPostsSuccess({
     this.posts = const <Post>[],
     this.limitReached = false,
   });
 
-  GetAllPostsSuccess copyWith({
-    //? Para editar el objeto usamos copyWith
-    List<Post>? posts,
-    bool? limitReached,
-  }) {
+  GetAllPostsSuccess copyWith({List<Post>? posts, bool? limitReached}) {
     return GetAllPostsSuccess(
       posts: posts ?? this.posts,
       limitReached: limitReached ?? this.limitReached,
     );
   }
 
-  //? Ahora incluye ambas propiedades para que Equatable detecte cambios en cualquiera de las dos
   @override
   List<Object> get props => [posts, limitReached];
 }

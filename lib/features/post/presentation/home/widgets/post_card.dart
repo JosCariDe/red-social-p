@@ -16,26 +16,31 @@ class PostCard extends StatelessWidget {
           children: [
             Text(
               post.title,
-              style: const TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8),
             Text(post.body),
             const SizedBox(height: 8),
             Row(
-              mainAxisAlignment: MainAxisAlignment.end,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Icon(Icons.thumb_up_alt_outlined, size: 16),
-                const SizedBox(width: 4),
-                Text(post.reactions.likes.toString()),
-                const SizedBox(width: 16),
-                const Icon(Icons.thumb_down_alt_outlined, size: 16),
-                const SizedBox(width: 4),
-                Text(post.reactions.dislikes.toString()),
+                Text(
+                  'id: ${post.id.toString()}',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                ),
+                Row(
+                  children: [
+                    const Icon(Icons.thumb_up_alt_outlined, size: 16),
+                    const SizedBox(width: 4),
+                    Text(post.reactions.likes.toString()),
+                    const SizedBox(width: 16),
+                    const Icon(Icons.thumb_down_alt_outlined, size: 16),
+                    const SizedBox(width: 4),
+                    Text(post.reactions.dislikes.toString()),
+                  ],
+                ),
               ],
-            )
+            ),
           ],
         ),
       ),

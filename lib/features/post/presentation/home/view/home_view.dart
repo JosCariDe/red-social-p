@@ -15,11 +15,18 @@ class HomeView extends StatefulWidget {
 class _HomeViewState extends State<HomeView> {
   final _scrollController = ScrollController();
 
+  
   @override
   void initState() {
     super.initState();
     _scrollController.addListener(_onScroll);
-    context.read<GetAllPostsBloc>().add(const GetAllPosts());
+    context.read<GetAllPostsBloc>().add( GetAllPosts());
+  }
+
+  void _onScroll() {
+    if (_isBottom) {
+      context.read<GetAllPostsBloc>().add(const GetAllPosts());
+    }
   }
 
   @override
@@ -68,11 +75,7 @@ class _HomeViewState extends State<HomeView> {
     super.dispose();
   }
 
-  void _onScroll() {
-    if (_isBottom) {
-      context.read<GetAllPostsBloc>().add(const GetAllPosts());
-    }
-  }
+  
 
   bool get _isBottom {
     if (!_scrollController.hasClients) return false;
