@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 
-class LogoutView extends StatelessWidget {
-  const LogoutView({super.key});
+class PostDetailScreen extends StatelessWidget {
+  const PostDetailScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

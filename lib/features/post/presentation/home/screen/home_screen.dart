@@ -5,22 +5,21 @@ import 'package:red_social_prueba/features/post/presentation/home/blocs/get_all_
 import 'package:red_social_prueba/features/post/presentation/home/blocs/get_all_posts/get_all_posts_state.dart';
 import 'package:red_social_prueba/features/post/presentation/home/widgets/post_card.dart';
 
-class HomeView extends StatefulWidget {
-  const HomeView({super.key});
+class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key});
 
   @override
-  State<HomeView> createState() => _HomeViewState();
+  State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeViewState extends State<HomeView> {
+class _HomeScreenState extends State<HomeScreen> {
   final _scrollController = ScrollController();
 
-  
   @override
   void initState() {
     super.initState();
     _scrollController.addListener(_onScroll);
-    context.read<GetAllPostsBloc>().add( GetAllPosts());
+    context.read<GetAllPostsBloc>().add(GetAllPosts());
   }
 
   void _onScroll() {
@@ -32,12 +31,11 @@ class _HomeViewState extends State<HomeView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Posts'),
-      ),
+      appBar: AppBar(title: const Text('Posts')),
       body: BlocBuilder<GetAllPostsBloc, GetAllPostsState>(
         builder: (context, state) {
-          if (state is GetAllPostsInitial || state is GetAllPostsLoading) {
+          if (state is GetAllPostsInitial ||
+              (state is GetAllPostsLoading && state is! GetAllPostsSuccess)) {
             return const Center(child: CircularProgressIndicator());
           }
           if (state is GetAllPostsError) {
@@ -74,8 +72,6 @@ class _HomeViewState extends State<HomeView> {
       ..dispose();
     super.dispose();
   }
-
-  
 
   bool get _isBottom {
     if (!_scrollController.hasClients) return false;

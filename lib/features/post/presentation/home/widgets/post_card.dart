@@ -7,36 +7,54 @@ class PostCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Card(
-      margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      elevation: 2,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+        side: BorderSide(color: colorScheme.onSurface.withAlpha((0.1 * 255).toInt())),
+      ),
       child: Padding(
-        padding: const EdgeInsets.all(12.0),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
               post.title,
-              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              style: textTheme.titleLarge,
             ),
             const SizedBox(height: 8),
-            Text(post.body),
-            const SizedBox(height: 8),
+            Text(
+              post.body,
+              style: textTheme.bodyMedium,
+            ),
+            const SizedBox(height: 16),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'id: ${post.id.toString()}',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  'ID: ${post.id}',
+                  style: textTheme.bodySmall?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: colorScheme.onSurface.withOpacity(0.6),
+                  ),
                 ),
                 Row(
                   children: [
-                    const Icon(Icons.thumb_up_alt_outlined, size: 16),
+                    Icon(Icons.thumb_up_alt_outlined,
+                        size: 18, color: colorScheme.primary),
                     const SizedBox(width: 4),
-                    Text(post.reactions.likes.toString()),
+                    Text(post.reactions.likes.toString(),
+                        style: textTheme.bodyMedium),
                     const SizedBox(width: 16),
-                    const Icon(Icons.thumb_down_alt_outlined, size: 16),
+                    Icon(Icons.thumb_down_alt_outlined,
+                        size: 18, color: colorScheme.error),
                     const SizedBox(width: 4),
-                    Text(post.reactions.dislikes.toString()),
+                    Text(post.reactions.dislikes.toString(),
+                        style: textTheme.bodyMedium),
                   ],
                 ),
               ],

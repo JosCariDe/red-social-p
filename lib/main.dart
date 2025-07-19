@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:red_social_prueba/config/router/app_router.dart';
+import 'package:red_social_prueba/config/theme/app_theme.dart';
 import 'package:red_social_prueba/core/db/local/posts_database.dart';
 
 import 'config/exports/exports_data.dart'; // Archivo de barril para importaciones
@@ -51,6 +52,7 @@ class MainApp extends StatelessWidget {
         child: MaterialApp.router(
           routerConfig: appRouter,
           debugShowCheckedModeBanner: false,
+          theme: AppTheme.darkTheme,
         ),
       ),
     );
