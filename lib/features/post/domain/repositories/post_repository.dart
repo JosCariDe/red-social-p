@@ -8,5 +8,7 @@ abstract class PostRepository {
   Future<Either<Failure, List<Post>>> getAllPost();
   Future<Either<Failure, int>> getCountPosts();
   Future<Either<Failure, List<Post>>> getAllPostsByIdUserLocal(int idUser);
+  Future<Either<Failure, bool>> savePostLocal(Post post);
+
 
 }

@@ -68,5 +68,14 @@ class PostRepositoryImpl implements PostRepository {
       }
     });
   }
+  
+  @override
+  Future<Either<Failure, bool>> savePostLocal(Post post) async{
+
+    return _handleRequest(() async {
+      //final count = await postRemoteDataSource.getCountPostRemote();
+      return await postLocalDataSource.savePostLocal(post);
+    });
+  }
 }
 
