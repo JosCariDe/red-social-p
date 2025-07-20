@@ -17,3 +17,11 @@ final class GetPostById extends GetPostByIdEvent {
   List<Object> get props => [idPost];
 
 }
+
+final class UpdatePostDetail extends GetPostByIdEvent {
+  final Post updatedPost;
+  const UpdatePostDetail(this.updatedPost);
+
+  @override
+  List<Object> get props => [updatedPost];
+}

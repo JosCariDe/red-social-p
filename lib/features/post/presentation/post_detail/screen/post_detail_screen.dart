@@ -16,6 +16,17 @@ class PostDetailScreen extends StatefulWidget {
 }
 
 class _PostDetailScreenState extends State<PostDetailScreen> {
+  static final Map<int, int> _comentariosPorPost = {};
+
+  int _getComentariosParaPost(int postId) {
+    if (!_comentariosPorPost.containsKey(postId)) {
+      _comentariosPorPost[postId] = Random(
+        postId,
+      ).nextInt(20); // Semilla por id
+    }
+    return _comentariosPorPost[postId]!;
+  }
+
   @override
   void initState() {
     super.initState();
@@ -36,17 +47,16 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
+    final comentarios = _getComentariosParaPost(widget.idPost);
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Detalle del Post'),
-      ),
+      appBar: AppBar(title: const Text('Detalle del Post')),
       body: BlocListener<UpdatedReactionsPostBloc, UpdatedReactionsPostState>(
         listener: (context, state) {
           if (state is UpdatedReactionsPostSuccess) {
             final postId = widget.idPost;
             if (state.post.id == postId) {
-              context.read<GetPostByIdBloc>().emit(GetPostByIdSuccess(post: state.post));
+              context.read<GetPostByIdBloc>().add(UpdatePostDetail(state.post));
             }
           }
         },
@@ -78,23 +88,32 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                           onTap: () => _handleReaction(context, post, 'like'),
                         ),
                         const SizedBox(width: 4),
-                        Text(post.reactions.likes.toString(), style: textTheme.bodyMedium),
+                        Text(
+                          post.reactions.likes.toString(),
+                          style: textTheme.bodyMedium,
+                        ),
                         const SizedBox(width: 16),
                         ReactionIcon(
                           isActive: post.reactionUser == 'dislike',
                           iconActive: Icons.thumb_down_alt,
                           iconInactive: Icons.thumb_down_alt_outlined,
                           color: colorScheme.error,
-                          onTap: () => _handleReaction(context, post, 'dislike'),
+                          onTap: () =>
+                              _handleReaction(context, post, 'dislike'),
                         ),
                         const SizedBox(width: 4),
-                        Text(post.reactions.dislikes.toString(), style: textTheme.bodyMedium),
+                        Text(
+                          post.reactions.dislikes.toString(),
+                          style: textTheme.bodyMedium,
+                        ),
                         const Spacer(),
                         const Icon(Icons.comment_outlined, size: 20),
                         const SizedBox(width: 4),
                         Text(
-                          '${Random().nextInt(20)} comentarios',
-                          style: textTheme.bodySmall?.copyWith(color: colorScheme.onSurfaceVariant),
+                          '$comentarios comentarios',
+                          style: textTheme.bodySmall?.copyWith(
+                            color: colorScheme.onSurfaceVariant,
+                          ),
                         ),
                       ],
                     ),
