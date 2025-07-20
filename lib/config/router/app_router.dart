@@ -1,6 +1,10 @@
+import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:red_social_prueba/config/exports/exports_data.dart';
+import 'package:red_social_prueba/features/post/presentation/create_post/blocs/create_post_bloc/create_post_bloc.dart';
+import 'package:red_social_prueba/features/post/presentation/create_post/screen/create_post_screen.dart';
 import 'package:red_social_prueba/features/post/presentation/home/blocs/updated_reactions_post/updated_reactions_post_bloc.dart';
+import 'package:red_social_prueba/features/user/presentation/login/blocs/auth_user_bloc/auth_user_bloc.dart';
 import 'package:red_social_prueba/features/user/presentation/login/blocs/login_bloc/login_bloc.dart';
 import '../../features/post/presentation/views_post_exports.dart';
 import '../../features/user/presentation/views_user_exports.dart';
@@ -49,11 +53,23 @@ final appRouter = GoRouter(
     ),
 
     GoRoute(
-  path: '/create-post',
-  builder: (context, state) => BlocProvider(
-    create: (_) => sl<CreatePostBloc>(),
-    child: const CreatePostScreen(),
-  ),
-),
+      path: '/create-post',
+      builder: (context, state) {
+        final authState = context.read<AuthUserBloc>().state;
+        if (authState is! AuthUserAuthenticated) {
+          return const Scaffold(body: Center(child: Text('No autenticado')));
+        }
+        final userId = authState.user.id;
+        return BlocProvider(
+          create: (_) => CreatePostBloc(
+            getAllPostByIdUserLocalUseCase: sl(),
+            getCountPostUseCase: sl(),
+            savePostLocalUseCase: sl(),
+            userId: userId,
+          ),
+          child: const CreatePostScreen(),
+        );
+      },
+    ),
   ],
 );

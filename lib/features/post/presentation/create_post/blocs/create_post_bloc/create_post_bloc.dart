@@ -13,13 +13,13 @@ class CreatePostBloc extends Bloc<CreatePostEvent, CreatePostState> {
   final GetCountPostUseCase getCountPostUseCase;
   final GetAllPostByIdUserLocalUseCase getAllPostByIdUserLocalUseCase;
   final SavePostLocalUseCase savePostLocalUseCase;
-  final User currentUser;
+  final int userId; // Solo el id
 
   CreatePostBloc({
-    required this.getCountPostUseCase,
     required this.getAllPostByIdUserLocalUseCase,
+    required this.getCountPostUseCase,
     required this.savePostLocalUseCase,
-    required this.currentUser,
+    required this.userId,
   }) : super(CreatePostInitial()) {
     on<CreatePostSubmitted>(_onCreatePostSubmitted);
   }
@@ -33,7 +33,7 @@ class CreatePostBloc extends Bloc<CreatePostEvent, CreatePostState> {
     // 1. Obtener el total de posts remotos
     final remoteCountResult = await getCountPostUseCase();
     // 2. Obtener los posts locales del usuario
-    final localPostsResult = await getAllPostByIdUserLocalUseCase(currentUser.id);
+    final localPostsResult = await getAllPostByIdUserLocalUseCase(userId);
 
     int remoteCount = 0;
     int localCount = 0;
@@ -50,7 +50,7 @@ class CreatePostBloc extends Bloc<CreatePostEvent, CreatePostState> {
       tags: event.tags,
       reactions: Reactions(likes: 0, dislikes: 0),
       views: 0,
-      userId: currentUser.id,
+      userId: userId,
       reactionUser: '',
     );
 

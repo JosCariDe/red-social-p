@@ -1,8 +1,12 @@
 import 'package:get_it/get_it.dart';
 import 'package:red_social_prueba/config/exports/exports_data.dart';
 import 'package:red_social_prueba/core/db/local/posts_database.dart';
+import 'package:red_social_prueba/features/post/domain/uses_cases/get_all_post_by_id_user_local_use_case.dart';
+import 'package:red_social_prueba/features/post/domain/uses_cases/get_count_post_use_case.dart';
 import 'package:red_social_prueba/features/post/domain/uses_cases/get_one_post_by_id_use_case.dart';
+import 'package:red_social_prueba/features/post/domain/uses_cases/save_post_local_use_case.dart';
 import 'package:red_social_prueba/features/post/domain/uses_cases/update_reaction_post_use_case.dart';
+import 'package:red_social_prueba/features/post/presentation/create_post/blocs/create_post_bloc/create_post_bloc.dart';
 import 'package:red_social_prueba/features/post/presentation/home/blocs/updated_reactions_post/updated_reactions_post_bloc.dart';
 import 'package:red_social_prueba/features/post/presentation/post_detail/blocs/get_one_post_by_id/get_post_by_id_bloc.dart';
 import 'package:red_social_prueba/features/user/data/data_sources/local/user_local_data_source.dart';
@@ -34,9 +38,13 @@ Future<void> init() async {
     ),
   );
   // Data sources USER
-  sl.registerLazySingleton<UserLocalDataSource>(() => UserSharedPreferenceDataSourceImpl());
+  sl.registerLazySingleton<UserLocalDataSource>(
+    () => UserSharedPreferenceDataSourceImpl(),
+  );
   // Repository USER
-  sl.registerLazySingleton<UserRepository>(() => UserRepositoryImpl(userLocalDataSource: sl()));
+  sl.registerLazySingleton<UserRepository>(
+    () => UserRepositoryImpl(userLocalDataSource: sl()),
+  );
   // Use cases
   sl.registerLazySingleton<GetAllPostUseCase>(
     () => GetAllPostUseCase(postRepository: sl()),
@@ -46,11 +54,29 @@ Future<void> init() async {
   );
   sl.registerLazySingleton<GetOnePostByIdUseCase>(
     () => GetOnePostByIdUseCase(postRepository: sl()),
-  ); 
+  );
+  sl.registerLazySingleton<GetCountPostUseCase>(
+    () => GetCountPostUseCase(postRepository: sl()),
+  );
+  
+  sl.registerLazySingleton<GetAllPostByIdUserLocalUseCase>(
+    () => GetAllPostByIdUserLocalUseCase(postRepository: sl()),
+  );
+
+  sl.registerLazySingleton<SavePostLocalUseCase>(
+    () => SavePostLocalUseCase(postRepository: sl()),
+  );
+  
   // Casos de uso USER
-  sl.registerLazySingleton<SaveUserUseCase>(() => SaveUserUseCase(userRepository: sl()));
-  sl.registerLazySingleton<GetUserUseCase>(() => GetUserUseCase(userRepository: sl()));
-  sl.registerLazySingleton<DeleteUserCase>(() => DeleteUserCase(userRepository: sl()));
+  sl.registerLazySingleton<SaveUserUseCase>(
+    () => SaveUserUseCase(userRepository: sl()),
+  );
+  sl.registerLazySingleton<GetUserUseCase>(
+    () => GetUserUseCase(userRepository: sl()),
+  );
+  sl.registerLazySingleton<DeleteUserCase>(
+    () => DeleteUserCase(userRepository: sl()),
+  );
 
   // Blocs
   //? GLOBAL:
@@ -62,4 +88,12 @@ Future<void> init() async {
   );
   sl.registerFactory(() => GetPostByIdBloc(getOnePostByIdUseCase: sl()));
   sl.registerFactory(() => LoginBloc(saveUserUseCase: sl()));
+  sl.registerFactory(
+    () => CreatePostBloc(
+      getAllPostByIdUserLocalUseCase: sl(),
+      getCountPostUseCase: sl(),
+      savePostLocalUseCase: sl(),
+      userId: 0, // valor dummy, lo sobreescribes en la ruta
+    ),
+  );
 }
