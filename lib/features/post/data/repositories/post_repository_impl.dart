@@ -65,7 +65,11 @@ class PostRepositoryImpl implements PostRepository {
   @override
   Future<Either<Failure, List<Post>>> getAllPostsByIdUserLocal(int idUser) {
     return _handleRequest(() async {
-      return await postLocalDataSource.getAllPostsLocalByIdUser(idUser);
+      final res = await postLocalDataSource.getAllPostsLocalByIdUser(idUser);
+      for (var postLocal in res) {
+        debugPrint('Post Local con el id: ${postLocal.id}');
+      }
+      return res;
     });
   }
 

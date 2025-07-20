@@ -21,7 +21,17 @@ class UserPostsScreen extends StatelessWidget {
     return BlocProvider(
       create: (_) => sl<UserPostsBloc>()..add(GetUserPosts(userId: userId)),
       child: Scaffold(
-        appBar: AppBar(title: const Text('Mis publicaciones')),
+        appBar: AppBar(
+          title: const Text('Mis publicaciones'),
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.refresh),
+              onPressed: () {
+                context.read<UserPostsBloc>().add(GetUserPosts(userId: userId));
+              },
+            ),
+          ],
+        ),
         body: BlocBuilder<UserPostsBloc, UserPostsState>(
           builder: (context, state) {
             if (state is UserPostsLoading) {

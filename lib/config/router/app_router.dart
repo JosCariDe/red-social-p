@@ -4,6 +4,8 @@ import 'package:red_social_prueba/config/exports/exports_data.dart';
 import 'package:red_social_prueba/features/post/presentation/create_post/blocs/create_post_bloc/create_post_bloc.dart';
 import 'package:red_social_prueba/features/post/presentation/create_post/screen/create_post_screen.dart';
 import 'package:red_social_prueba/features/post/presentation/home/blocs/updated_reactions_post/updated_reactions_post_bloc.dart';
+import 'package:red_social_prueba/features/post/presentation/main_navigation_screen.dart';
+import 'package:red_social_prueba/features/post/presentation/posts_user/blocs/user_posts_bloc/user_posts_bloc.dart';
 import 'package:red_social_prueba/features/user/presentation/login/blocs/auth_user_bloc/auth_user_bloc.dart';
 import 'package:red_social_prueba/features/user/presentation/login/blocs/login_bloc/login_bloc.dart';
 import '../../features/post/presentation/views_post_exports.dart';
@@ -22,8 +24,11 @@ final appRouter = GoRouter(
         providers: [
           BlocProvider(create: (_) => sl<GetAllPostsBloc>()),
           BlocProvider(create: (_) => sl<UpdatedReactionsPostBloc>()),
+          // Si UserPostsScreen necesita su propio BLoC, agrégalo aquí:
+          BlocProvider(create: (_) => sl<UserPostsBloc>()),
+          // Si en el futuro FavoritesScreen necesita un BLoC, agrégalo aquí también.
         ],
-        child: const HomeScreen(),
+        child: const MainNavigationScreen(),
       ),
     ),
     GoRoute(
