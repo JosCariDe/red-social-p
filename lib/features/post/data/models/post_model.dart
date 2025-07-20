@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:red_social_prueba/features/post/data/models/reactions_model.dart';
 import 'package:red_social_prueba/features/post/domain/entities/post.dart';
 
+// ignore: must_be_immutable
 class PostModel extends Post {
 
   String reactionUser;
