@@ -23,7 +23,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
     return BlocListener<CreatePostBloc, CreatePostState>(
       listener: (context, state) {
         if (state is CreatePostSuccess) {
-          context.pop(); // Vuelve a la pantalla anterior (Home)
+          context.pop(true); // Vuelve a la pantalla anterior (Home)
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('¡Post creado exitosamente!')),
           );

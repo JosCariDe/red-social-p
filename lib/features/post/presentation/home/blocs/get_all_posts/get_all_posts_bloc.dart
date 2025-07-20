@@ -13,11 +13,23 @@ class GetAllPostsBloc extends Bloc<GetAllPostsEvent, GetAllPostsState> {
     on<UpdatePostInList>((event, emit) {
       final currentState = state;
       if (currentState is GetAllPostsSuccess) {
-        final updatedPosts = currentState.posts.map((post) =>
-          post.id == event.updatedPost.id ? event.updatedPost : post
-        ).toList();
+        final updatedPosts = currentState.posts
+            .map(
+              (post) =>
+                  post.id == event.updatedPost.id ? event.updatedPost : post,
+            )
+            .toList();
         emit(currentState.copyWith(posts: updatedPosts));
       }
+    });
+    on<ReloadPosts>((event, emit) async {
+      emit(GetAllPostsLoading());
+      final result = await getAllPostUseCase(limit: 10, skip: 0);
+      result.fold(
+        (failure) =>
+            emit(GetAllPostsError(message: 'Error al cargar los posts')),
+        (posts) => emit(GetAllPostsSuccess(posts: posts, limitReached: false)),
+      );
     });
   }
 

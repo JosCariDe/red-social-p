@@ -25,3 +25,5 @@ class UpdatePostInList extends GetAllPostsEvent {
   @override
   List<Object> get props => [updatedPost];
 }
+
+class ReloadPosts extends GetAllPostsEvent {}
