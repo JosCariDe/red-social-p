@@ -6,7 +6,6 @@ import 'package:red_social_prueba/features/post/presentation/home/blocs/get_all_
 import 'package:red_social_prueba/features/post/presentation/home/blocs/get_all_posts/get_all_posts_state.dart';
 import 'package:red_social_prueba/features/post/presentation/home/blocs/updated_reactions_post/updated_reactions_post_bloc.dart';
 import 'package:red_social_prueba/features/post/presentation/home/widgets/post_card.dart';
-import 'package:red_social_prueba/features/post/presentation/post_detail/screen/post_detail_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
