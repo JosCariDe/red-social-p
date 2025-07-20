@@ -81,7 +81,8 @@ class PostRepositoryImpl implements PostRepository {
   Future<Either<Failure, Post>> getOnePostById(int idPost) {
     return _handleRequest(() async {
       final count = await postRemoteDataSource.getCountPostRemote();
-      if (idPost > count) {
+      final isLocal = await searchPostLocalByID(idPost);
+      if (idPost > count || isLocal.getOrElse(() => false)) {
         return await postLocalDataSource.getOnePostLocalById(idPost);
       } else {
         return await postRemoteDataSource.getPostRemoteById(idPost);
