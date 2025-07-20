@@ -22,7 +22,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       (failure) => emit(LoginFailure(message: 'Error al iniciar sesión')),
       (success) {
         // Simula obtener el id y nombre del usuario (ajusta según tu modelo real)
-        emit(LoginSuccess(userId: 777, username: event.email));
+        emit(LoginSuccess(userId: 777, username: event.email, password: event.password));
       },
     );
   }

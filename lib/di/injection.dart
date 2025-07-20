@@ -12,6 +12,7 @@ import 'package:red_social_prueba/features/user/domain/repositories/user_reposit
 import 'package:red_social_prueba/features/user/domain/uses_cases/delete_user_case.dart';
 import 'package:red_social_prueba/features/user/domain/uses_cases/get_user_use_case.dart';
 import 'package:red_social_prueba/features/user/domain/uses_cases/save_user_use_case.dart';
+import 'package:red_social_prueba/features/user/presentation/login/blocs/auth_user_bloc/auth_user_bloc.dart';
 import 'package:red_social_prueba/features/user/presentation/login/blocs/login_bloc/login_bloc.dart';
 // Importa aquí todas tus dependencias y casos de uso
 
@@ -52,6 +53,9 @@ Future<void> init() async {
   sl.registerLazySingleton<DeleteUserCase>(() => DeleteUserCase(userRepository: sl()));
 
   // Blocs
+  //? GLOBAL:
+  sl.registerLazySingleton(() => AuthUserBloc());
+  //? OTROS
   sl.registerFactory(() => GetAllPostsBloc(getAllPostUseCase: sl()));
   sl.registerFactory(
     () => UpdatedReactionsPostBloc(updateReactionPostUseCase: sl()),

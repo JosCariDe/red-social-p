@@ -6,6 +6,7 @@ import 'package:red_social_prueba/features/post/presentation/home/blocs/get_all_
 import 'package:red_social_prueba/features/post/presentation/home/blocs/get_all_posts/get_all_posts_state.dart';
 import 'package:red_social_prueba/features/post/presentation/home/blocs/updated_reactions_post/updated_reactions_post_bloc.dart';
 import 'package:red_social_prueba/features/post/presentation/home/widgets/post_card.dart';
+import 'package:red_social_prueba/features/user/presentation/login/blocs/auth_user_bloc/auth_user_bloc.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -33,7 +34,19 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Posts')),
+      appBar: AppBar(
+        title: BlocBuilder<AuthUserBloc, AuthUserState>(
+          builder: (context, state) {
+            if (state is AuthUserAuthenticated) {
+              return Text(
+                'Bienvenido, ${state.user.email} (ID: ${state.user.id})',
+              );
+            }
+            return const Text('Posts');
+          },
+        ),
+        // ... resto del AppBar ...
+      ),
       body: BlocListener<UpdatedReactionsPostBloc, UpdatedReactionsPostState>(
         listener: (context, state) {
           if (state is UpdatedReactionsPostSuccess) {

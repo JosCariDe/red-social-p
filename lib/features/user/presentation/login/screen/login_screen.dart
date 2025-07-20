@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:red_social_prueba/di/injection.dart';
+import 'package:red_social_prueba/features/user/domain/entities/user.dart';
+import 'package:red_social_prueba/features/user/presentation/login/blocs/auth_user_bloc/auth_user_bloc.dart';
 import 'package:red_social_prueba/features/user/presentation/login/blocs/login_bloc/login_bloc.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -26,16 +28,21 @@ class _LoginScreenState extends State<LoginScreen> {
         listener: (context, state) {
           if (state is LoginSuccess) {
             // Navega a posts y pasa el usuario (puedes guardar en un provider global si lo prefieres)
+            final user = User(
+              id: state.userId,
+              email: state.username,
+              password: state.password,
+            );
+            context.read<AuthUserBloc>().add(AuthUserLoggedIn(user: user));
             context.go('/posts');
             // Aquí podrías guardar el usuario en un provider/bloc global para mostrarlo en el AppBar
           } else if (state is LoginFailure) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(state.message)),
-            );
+            ScaffoldMessenger.of(
+              context,
+            ).showSnackBar(SnackBar(content: Text(state.message)));
           }
         },
         child: Scaffold(
-          
           body: Center(
             child: SingleChildScrollView(
               padding: const EdgeInsets.symmetric(horizontal: 24.0),
@@ -62,8 +69,9 @@ class _LoginScreenState extends State<LoginScreen> {
                         prefixIcon: Icon(Icons.email_outlined),
                         hintText: 'Email',
                       ),
-                      validator: (value) =>
-                          value != null && value.contains('@') ? null : 'Email inválido',
+                      validator: (value) => value != null && value.contains('@')
+                          ? null
+                          : 'Email inválido',
                     ),
                     const SizedBox(height: 16),
                     TextFormField(
@@ -74,8 +82,9 @@ class _LoginScreenState extends State<LoginScreen> {
                         hintText: 'Password',
                         suffixIcon: Icon(Icons.visibility_off),
                       ),
-                      validator: (value) =>
-                          value != null && value.length >= 6 ? null : 'Mínimo 6 caracteres',
+                      validator: (value) => value != null && value.length >= 6
+                          ? null
+                          : 'Mínimo 6 caracteres',
                     ),
                     const SizedBox(height: 32),
                     BlocBuilder<LoginBloc, LoginState>(
@@ -86,11 +95,11 @@ class _LoginScreenState extends State<LoginScreen> {
                               : () {
                                   if (_formKey.currentState!.validate()) {
                                     context.read<LoginBloc>().add(
-                                          LoginSubmitted(
-                                            email: _emailController.text.trim(),
-                                            password: _passwordController.text,
-                                          ),
-                                        );
+                                      LoginSubmitted(
+                                        email: _emailController.text.trim(),
+                                        password: _passwordController.text,
+                                      ),
+                                    );
                                   }
                                 },
                           child: state is LoginLoading
