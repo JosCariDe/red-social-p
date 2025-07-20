@@ -1,6 +1,7 @@
 import 'package:get_it/get_it.dart';
 import 'package:red_social_prueba/config/exports/exports_data.dart';
 import 'package:red_social_prueba/core/db/local/posts_database.dart';
+import 'package:red_social_prueba/features/post/domain/uses_cases/delete_posts_local_use_case.dart';
 import 'package:red_social_prueba/features/post/domain/uses_cases/get_all_post_by_id_user_local_use_case.dart';
 import 'package:red_social_prueba/features/post/domain/uses_cases/get_count_post_use_case.dart';
 import 'package:red_social_prueba/features/post/domain/uses_cases/get_one_post_by_id_use_case.dart';
@@ -19,6 +20,7 @@ import 'package:red_social_prueba/features/user/domain/uses_cases/get_user_use_c
 import 'package:red_social_prueba/features/user/domain/uses_cases/save_user_use_case.dart';
 import 'package:red_social_prueba/features/user/presentation/login/blocs/auth_user_bloc/auth_user_bloc.dart';
 import 'package:red_social_prueba/features/user/presentation/login/blocs/login_bloc/login_bloc.dart';
+import 'package:red_social_prueba/features/user/presentation/logout/blocs/logout_bloc/logout_bloc.dart';
 // Importa aquí todas tus dependencias y casos de uso
 
 final sl = GetIt.instance;
@@ -67,6 +69,9 @@ Future<void> init() async {
   sl.registerLazySingleton<SavePostLocalUseCase>(
     () => SavePostLocalUseCase(postRepository: sl()),
   );
+  sl.registerLazySingleton<DeletePostsLocalUseCase>(
+    () => DeletePostsLocalUseCase(postRepository: sl()),
+  );
   
   // Casos de uso USER
   sl.registerLazySingleton<SaveUserUseCase>(
@@ -98,4 +103,5 @@ Future<void> init() async {
     ),
   );
   sl.registerFactory(() => UserPostsBloc(getAllPostByIdUserLocalUseCase: sl()));
+  sl.registerFactory(() => LogoutBloc(deletePostsLocalUseCase: sl()));
 }

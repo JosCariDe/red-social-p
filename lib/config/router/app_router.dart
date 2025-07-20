@@ -8,6 +8,7 @@ import 'package:red_social_prueba/features/post/presentation/main_navigation_scr
 import 'package:red_social_prueba/features/post/presentation/posts_user/blocs/user_posts_bloc/user_posts_bloc.dart';
 import 'package:red_social_prueba/features/user/presentation/login/blocs/auth_user_bloc/auth_user_bloc.dart';
 import 'package:red_social_prueba/features/user/presentation/login/blocs/login_bloc/login_bloc.dart';
+import 'package:red_social_prueba/features/user/presentation/logout/blocs/logout_bloc/logout_bloc.dart';
 import '../../features/post/presentation/views_post_exports.dart';
 import '../../features/user/presentation/views_user_exports.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -26,6 +27,7 @@ final appRouter = GoRouter(
           BlocProvider(create: (_) => sl<UpdatedReactionsPostBloc>()),
           // Si UserPostsScreen necesita su propio BLoC, agrégalo aquí:
           BlocProvider(create: (_) => sl<UserPostsBloc>()),
+          BlocProvider(create: (_) => sl<LogoutBloc>()),
           // Si en el futuro FavoritesScreen necesita un BLoC, agrégalo aquí también.
         ],
         child: const MainNavigationScreen(),
@@ -61,7 +63,7 @@ final appRouter = GoRouter(
       path: '/create-post',
       builder: (context, state) {
         final authState = context.read<AuthUserBloc>().state;
-        if (authState is! AuthUserAuthenticated) {
+        if (authState is! AuthUserAuthenticated) { //? SIempre pasará esta autenticacion, ya que es local el logi con shared.
           return const Scaffold(body: Center(child: Text('No autenticado')));
         }
         final userId = authState.user.id;
@@ -78,7 +80,7 @@ final appRouter = GoRouter(
     ),
 
     GoRoute(
-      path: '/my-posts',
+      path: '/posts/my-posts',
       builder: (context, state) => const UserPostsScreen(),
     ),
   ],

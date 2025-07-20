@@ -91,4 +91,10 @@ class PostSqliteDataSourceImpl implements PostLocalDataSource {
       throw LocalFailure();
     }
   }
+
+  @override
+  Future<void> clearAllPostsLocal() async {
+    final db = database; 
+    await db.clearAllPosts();
+  }
 }

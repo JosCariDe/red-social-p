@@ -33,3 +33,5 @@ class ReloadUserPosts extends UserPostsEvent {
   @override
   List<Object> get props => [userId];
 }
+
+class ResetUserPosts extends UserPostsEvent {}

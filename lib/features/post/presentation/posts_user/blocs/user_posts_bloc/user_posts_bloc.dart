@@ -10,10 +10,13 @@ class UserPostsBloc extends Bloc<UserPostsEvent, UserPostsState> {
   final GetAllPostByIdUserLocalUseCase getAllPostByIdUserLocalUseCase;
 
   UserPostsBloc({required this.getAllPostByIdUserLocalUseCase})
-      : super(UserPostsInitial()) {
+    : super(UserPostsInitial()) {
     on<GetUserPosts>(_onGetUserPosts);
     on<UpdateUserPostInList>(_onUpdateUserPostInList);
     on<ReloadUserPosts>(_onReloadUserPosts);
+    on<ResetUserPosts>((event, emit) {
+      emit(UserPostsInitial());
+    });
   }
 
   Future<void> _onGetUserPosts(
@@ -23,7 +26,11 @@ class UserPostsBloc extends Bloc<UserPostsEvent, UserPostsState> {
     emit(UserPostsLoading());
     final result = await getAllPostByIdUserLocalUseCase(event.userId);
     result.fold(
-      (failure) => emit(const UserPostsError('Error al cargar los posts desde el Bloc UserPostBLoC')),
+      (failure) => emit(
+        const UserPostsError(
+          'Error al cargar los posts desde el Bloc UserPostBLoC',
+        ),
+      ),
       (posts) => emit(UserPostsSuccess(posts)),
     );
   }
@@ -38,7 +45,7 @@ class UserPostsBloc extends Bloc<UserPostsEvent, UserPostsState> {
       final updatedPosts = currentState.posts.map((post) {
         return post.id == event.post.id ? event.post : post;
       }).toList();
-      
+
       emit(UserPostsSuccess(updatedPosts));
     }
   }
@@ -52,7 +59,7 @@ class UserPostsBloc extends Bloc<UserPostsEvent, UserPostsState> {
     if (currentState is! UserPostsSuccess) {
       emit(UserPostsLoading());
     }
-    
+
     final result = await getAllPostByIdUserLocalUseCase(event.userId);
     result.fold(
       (failure) => emit(const UserPostsError('Error al recargar los posts')),

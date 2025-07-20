@@ -1,10 +1,41 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
+import 'package:red_social_prueba/features/post/presentation/home/blocs/get_all_posts/get_all_posts_bloc.dart';
+import 'package:red_social_prueba/features/post/presentation/home/blocs/get_all_posts/get_all_posts_event.dart';
+import 'package:red_social_prueba/features/post/presentation/posts_user/blocs/user_posts_bloc/user_posts_bloc.dart';
+import 'package:red_social_prueba/features/user/presentation/logout/blocs/logout_bloc/logout_bloc.dart';
 
 class LogoutScreen extends StatelessWidget {
   const LogoutScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return Scaffold(
+      body: Center(
+        child: BlocConsumer<LogoutBloc, LogoutState>(
+          listener: (context, state) {
+            if (state is LogoutSuccess) {
+              // Limpiar los BLoCs de posts
+              context.read<GetAllPostsBloc>().add(ResetPosts());
+              context.read<UserPostsBloc>().add(ResetUserPosts());
+              // Navegar a la pantalla de login o inicial
+              context.push('/login');
+            }
+          },
+          builder: (context, state) {
+            if (state is LogoutLoading) {
+              return CircularProgressIndicator();
+            }
+            return ElevatedButton(
+              child: Text('Cerrar sesión'),
+              onPressed: () {
+                context.read<LogoutBloc>().add(LogoutRequested());
+              },
+            );
+          },
+        ),
+      ),
+    );
   }
 }

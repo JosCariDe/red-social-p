@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:red_social_prueba/features/post/presentation/home/screen/home_screen.dart';
 import 'package:red_social_prueba/features/post/presentation/posts_user/screen/user_posts_screen.dart';
+import 'package:red_social_prueba/features/user/presentation/logout/screen/logout_screen.dart';
 
 class MainNavigationScreen extends StatefulWidget {
   const MainNavigationScreen({super.key});
@@ -15,6 +16,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
   final List<Widget> _screens = const [
     HomeScreen(),
     UserPostsScreen(),
+    LogoutScreen()
     // FavoritesScreen(), // Para el futuro
   ];
 
@@ -37,10 +39,11 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
             icon: Icon(Icons.person),
             label: 'Mis Posts',
           ),
-          // BottomNavigationBarItem(
-          //   icon: Icon(Icons.favorite),
-          //   label: 'Favoritos',
-          // ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.logout),
+            label: 'Sesion',
+          ),
+         
         ],
       ),
     );
