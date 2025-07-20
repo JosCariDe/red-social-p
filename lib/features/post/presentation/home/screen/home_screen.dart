@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:red_social_prueba/features/post/presentation/home/blocs/get_all_posts/get_all_posts_bloc.dart';
 import 'package:red_social_prueba/features/post/presentation/home/blocs/get_all_posts/get_all_posts_event.dart';
 import 'package:red_social_prueba/features/post/presentation/home/blocs/get_all_posts/get_all_posts_state.dart';
 import 'package:red_social_prueba/features/post/presentation/home/blocs/updated_reactions_post/updated_reactions_post_bloc.dart';
 import 'package:red_social_prueba/features/post/presentation/home/widgets/post_card.dart';
+import 'package:red_social_prueba/features/post/presentation/post_detail/screen/post_detail_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -62,7 +64,12 @@ class _HomeScreenState extends State<HomeScreen> {
                     return const Center(child: CircularProgressIndicator());
                   }
                   final post = state.posts[index];
-                  return PostCard(post: post);
+                  return GestureDetector(
+                    onTap: () {
+                      context.push('/posts/${post.id}');
+                    },
+                    child: PostCard(post: post),
+                  );
                 },
               );
             }

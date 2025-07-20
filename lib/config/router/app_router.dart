@@ -2,6 +2,9 @@ import 'package:go_router/go_router.dart';
 
 import '../../features/post/presentation/views_post_exports.dart'; //Exportacion de barril
 import '../../features/user/presentation/views_user_exports.dart'; //Exportacion de barril
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:red_social_prueba/features/post/presentation/post_detail/blocs/get_one_post_by_id/get_post_by_id_bloc.dart';
+import 'package:red_social_prueba/features/post/domain/uses_cases/get_one_post_by_id_use_case.dart';
 
 final appRouter = GoRouter(
   initialLocation: '/posts',
@@ -12,7 +15,12 @@ final appRouter = GoRouter(
       path: '/posts/:id',
       builder: (context, state) {
         final postId = int.parse(state.pathParameters['id']!);
-        return PostDetailScreen(idPost: postId);
+        return BlocProvider(
+          create: (context) => GetPostByIdBloc(
+            getOnePostByIdUseCase: context.read<GetOnePostByIdUseCase>(),
+          )..add(GetPostById(idPost: postId)),
+          child: PostDetailScreen(idPost: postId),
+        );
       },
     ),
 

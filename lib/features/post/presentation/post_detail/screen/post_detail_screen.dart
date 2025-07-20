@@ -19,17 +19,17 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
   @override
   void initState() {
     super.initState();
-    //context.read<GetPostByIdBloc>().add(GetPostById(idPost: widget.idPost));
+    context.read<GetPostByIdBloc>().add(GetPostById(idPost: widget.idPost));
   }
 
   void _handleReaction(BuildContext context, Post post, String newReaction) {
-    /*context.read<UpdatedReactionsPostBloc>().add(
-          UpdateReaction(
-            idPost: post.id,
-            reactionUser: newReaction == post.reactionUser ? '' : newReaction,
-            postUpdated: post,
-          ),
-        ); */
+    context.read<UpdatedReactionsPostBloc>().add(
+      UpdateReaction(
+        idPost: post.id,
+        reactionUser: newReaction,
+        postUpdated: post,
+      ),
+    );
   }
 
   @override
@@ -41,75 +41,71 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
       appBar: AppBar(
         title: const Text('Detalle del Post'),
       ),
-      body: BlocBuilder<GetPostByIdBloc, GetPostByIdState>(
-        builder: (context, state) {
-          if (state is GetPostByIdLoading) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (state is GetPostByIdError) {
-            return Center(child: Text('Error: ${state.message}'));
-          } else if (state is GetPostByIdSuccess) {
-            final originalPost = state.post;
-
-            return BlocBuilder<UpdatedReactionsPostBloc, UpdatedReactionsPostState>(
-              buildWhen: (prev, curr) {
-                if (curr is UpdatedReactionsPostSuccess) {
-                  return curr.post.id == originalPost.id;
-                }
-                return false;
-              },
-              builder: (context, reactionState) {
-                final post = reactionState is UpdatedReactionsPostSuccess
-                    ? reactionState.post
-                    : originalPost;
-
-                return SingleChildScrollView(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(post.title, style: textTheme.headlineMedium),
-                      const SizedBox(height: 12),
-                      Text(post.body, style: textTheme.bodyLarge),
-                      const SizedBox(height: 24),
-                      Row(
-                        children: [
-                          ReactionIcon(
-                            isActive: post.reactionUser == 'like',
-                            iconActive: Icons.thumb_up_alt,
-                            iconInactive: Icons.thumb_up_alt_outlined,
-                            color: colorScheme.primary,
-                            onTap: () => _handleReaction(context, post, 'like'),
-                          ),
-                          const SizedBox(width: 4),
-                          Text(post.reactions.likes.toString(), style: textTheme.bodyMedium),
-                          const SizedBox(width: 16),
-                          ReactionIcon(
-                            isActive: post.reactionUser == 'dislike',
-                            iconActive: Icons.thumb_down_alt,
-                            iconInactive: Icons.thumb_down_alt_outlined,
-                            color: colorScheme.error,
-                            onTap: () => _handleReaction(context, post, 'dislike'),
-                          ),
-                          const SizedBox(width: 4),
-                          Text(post.reactions.dislikes.toString(), style: textTheme.bodyMedium),
-                          const Spacer(),
-                          const Icon(Icons.comment_outlined, size: 20),
-                          const SizedBox(width: 4),
-                          Text(
-                            '${Random().nextInt(20)} comentarios',
-                            style: textTheme.bodySmall?.copyWith(color: colorScheme.onSurfaceVariant),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                );
-              },
-            );
+      body: BlocListener<UpdatedReactionsPostBloc, UpdatedReactionsPostState>(
+        listener: (context, state) {
+          if (state is UpdatedReactionsPostSuccess) {
+            final postId = widget.idPost;
+            if (state.post.id == postId) {
+              context.read<GetPostByIdBloc>().emit(GetPostByIdSuccess(post: state.post));
+            }
           }
-
-          return const Center(child: Text('Cargando...'));
         },
+        child: BlocBuilder<GetPostByIdBloc, GetPostByIdState>(
+          builder: (context, state) {
+            if (state is GetPostByIdLoading) {
+              return const Center(child: CircularProgressIndicator());
+            } else if (state is GetPostByIdError) {
+              return Center(child: Text('Error: ${state.message}'));
+            } else if (state is GetPostByIdSuccess) {
+              final post = state.post;
+
+              return SingleChildScrollView(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(post.title, style: textTheme.headlineMedium),
+                    const SizedBox(height: 12),
+                    Text(post.body, style: textTheme.bodyLarge),
+                    const SizedBox(height: 24),
+                    Row(
+                      children: [
+                        ReactionIcon(
+                          isActive: post.reactionUser == 'like',
+                          iconActive: Icons.thumb_up_alt,
+                          iconInactive: Icons.thumb_up_alt_outlined,
+                          color: colorScheme.primary,
+                          onTap: () => _handleReaction(context, post, 'like'),
+                        ),
+                        const SizedBox(width: 4),
+                        Text(post.reactions.likes.toString(), style: textTheme.bodyMedium),
+                        const SizedBox(width: 16),
+                        ReactionIcon(
+                          isActive: post.reactionUser == 'dislike',
+                          iconActive: Icons.thumb_down_alt,
+                          iconInactive: Icons.thumb_down_alt_outlined,
+                          color: colorScheme.error,
+                          onTap: () => _handleReaction(context, post, 'dislike'),
+                        ),
+                        const SizedBox(width: 4),
+                        Text(post.reactions.dislikes.toString(), style: textTheme.bodyMedium),
+                        const Spacer(),
+                        const Icon(Icons.comment_outlined, size: 20),
+                        const SizedBox(width: 4),
+                        Text(
+                          '${Random().nextInt(20)} comentarios',
+                          style: textTheme.bodySmall?.copyWith(color: colorScheme.onSurfaceVariant),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              );
+            }
+
+            return const Center(child: Text('Cargando...'));
+          },
+        ),
       ),
     );
   }
