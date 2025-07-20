@@ -11,7 +11,14 @@ final class UpdatedReactionsPostInitial extends UpdatedReactionsPostState {}
 
 final class UpdatedReactionsPostLoading extends UpdatedReactionsPostState {}
 
-final class UpdatedReactionsPostSuccess extends UpdatedReactionsPostState {}
+final class UpdatedReactionsPostSuccess extends UpdatedReactionsPostState {
+  final Post post;
+
+  const UpdatedReactionsPostSuccess({required this.post});
+
+  @override
+  List<Object> get props => [post];
+}
 
 final class UpdatedReactionsPostError extends UpdatedReactionsPostState {
   final String message;

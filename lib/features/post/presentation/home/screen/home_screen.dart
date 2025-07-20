@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:red_social_prueba/features/post/presentation/home/blocs/get_all_posts/get_all_posts_bloc.dart';
 import 'package:red_social_prueba/features/post/presentation/home/blocs/get_all_posts/get_all_posts_event.dart';
 import 'package:red_social_prueba/features/post/presentation/home/blocs/get_all_posts/get_all_posts_state.dart';
+import 'package:red_social_prueba/features/post/presentation/home/blocs/updated_reactions_post/updated_reactions_post_bloc.dart';
 import 'package:red_social_prueba/features/post/presentation/home/widgets/post_card.dart';
+import 'package:red_social_prueba/features/user/presentation/login/blocs/auth_user_bloc/auth_user_bloc.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -31,36 +34,69 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Posts')),
-      body: BlocBuilder<GetAllPostsBloc, GetAllPostsState>(
-        builder: (context, state) {
-          if (state is GetAllPostsInitial ||
-              (state is GetAllPostsLoading && state is! GetAllPostsSuccess)) {
-            return const Center(child: CircularProgressIndicator());
-          }
-          if (state is GetAllPostsError) {
-            return Center(child: Text(state.message));
-          }
-          if (state is GetAllPostsSuccess) {
-            if (state.posts.isEmpty) {
-              return const Center(child: Text('No posts found'));
+      appBar: AppBar(
+        title: BlocBuilder<AuthUserBloc, AuthUserState>(
+          builder: (context, state) {
+            if (state is AuthUserAuthenticated) {
+              return Text(
+                'Bienvenido, ${state.user.email} (ID: ${state.user.id})',
+              );
             }
-            return ListView.builder(
-              controller: _scrollController,
-              itemCount: state.limitReached
-                  ? state.posts.length
-                  : state.posts.length + 1,
-              itemBuilder: (context, index) {
-                if (index >= state.posts.length) {
-                  return const Center(child: CircularProgressIndicator());
-                }
-                final post = state.posts[index];
-                return PostCard(post: post);
-              },
-            );
+            return const Text('Posts');
+          },
+        ),
+        // ... resto del AppBar ...
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          final result = await context.push('/create-post');
+          if (result == true) {
+            context.read<GetAllPostsBloc>().add(ReloadPosts());
           }
-          return const Center(child: Text('Something went wrong'));
         },
+        child: const Icon(Icons.add),
+      ),
+      body: BlocListener<UpdatedReactionsPostBloc, UpdatedReactionsPostState>(
+        listener: (context, state) {
+          if (state is UpdatedReactionsPostSuccess) {
+            context.read<GetAllPostsBloc>().add(UpdatePostInList(state.post));
+          }
+        },
+        child: BlocBuilder<GetAllPostsBloc, GetAllPostsState>(
+          builder: (context, state) {
+            if (state is GetAllPostsInitial ||
+                (state is GetAllPostsLoading && state is! GetAllPostsSuccess)) {
+              return const Center(child: CircularProgressIndicator());
+            }
+            if (state is GetAllPostsError) {
+              return Center(child: Text(state.message));
+            }
+            if (state is GetAllPostsSuccess) {
+              if (state.posts.isEmpty) {
+                return const Center(child: Text('No posts found'));
+              }
+              return ListView.builder(
+                controller: _scrollController,
+                itemCount: state.limitReached
+                    ? state.posts.length
+                    : state.posts.length + 1,
+                itemBuilder: (context, index) {
+                  if (index >= state.posts.length) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+                  final post = state.posts[index];
+                  return GestureDetector(
+                    onTap: () {
+                      context.push('/posts/${post.id}');
+                    },
+                    child: PostCard(post: post),
+                  );
+                },
+              );
+            }
+            return const Center(child: Text('Something went wrong'));
+          },
+        ),
       ),
     );
   }

@@ -8,9 +8,13 @@ part 'get_post_by_id_state.dart';
 
 class GetPostByIdBloc extends Bloc<GetPostByIdEvent, GetPostByIdState> {
   final GetOnePostByIdUseCase getOnePostByIdUseCase;
+
   GetPostByIdBloc({required this.getOnePostByIdUseCase})
     : super(GetPostByIdInitial()) {
     on<GetPostById>(_onGetOnePostById);
+    on<UpdatePostDetail>((event, emit) {
+      emit(GetPostByIdSuccess(post: event.updatedPost));
+    });
   }
 
   Future<void> _onGetOnePostById(
