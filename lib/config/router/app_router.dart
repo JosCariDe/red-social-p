@@ -1,6 +1,7 @@
 import 'package:go_router/go_router.dart';
 import 'package:red_social_prueba/config/exports/exports_data.dart';
 import 'package:red_social_prueba/features/post/presentation/home/blocs/updated_reactions_post/updated_reactions_post_bloc.dart';
+import 'package:red_social_prueba/features/user/presentation/login/blocs/login_bloc/login_bloc.dart';
 import '../../features/post/presentation/views_post_exports.dart';
 import '../../features/user/presentation/views_user_exports.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -8,7 +9,8 @@ import 'package:red_social_prueba/features/post/presentation/post_detail/blocs/g
 import 'package:red_social_prueba/di/injection.dart';
 
 final appRouter = GoRouter(
-  initialLocation: '/posts',
+  //initialLocation: '/posts',
+  initialLocation: '/login',
   routes: [
     GoRoute(
       path: '/posts',
@@ -36,6 +38,14 @@ final appRouter = GoRouter(
         );
       },
     ),
-    GoRoute(path: '/login', builder: (context, state) => const LoginScreen()),
+    GoRoute(
+      path: '/login',
+      builder: (context, state) {
+        return BlocProvider(
+          create: (_) => sl<LoginBloc>(),
+          child: LoginScreen(),
+        );
+      },
+    ),
   ],
 );

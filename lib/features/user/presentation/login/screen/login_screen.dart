@@ -35,10 +35,7 @@ class _LoginScreenState extends State<LoginScreen> {
           }
         },
         child: Scaffold(
-          appBar: AppBar(
-            title: const Text('Inicio de sesión'),
-            centerTitle: true,
-          ),
+          
           body: Center(
             child: SingleChildScrollView(
               padding: const EdgeInsets.symmetric(horizontal: 24.0),
@@ -48,13 +45,13 @@ class _LoginScreenState extends State<LoginScreen> {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     Text(
-                      'Hey there,',
+                      'Dimelo Rey,',
                       style: textTheme.bodyLarge?.copyWith(fontSize: 18),
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      'Welcome Back',
+                      'Welcome To Back',
                       style: textTheme.titleLarge?.copyWith(fontSize: 24),
                       textAlign: TextAlign.center,
                     ),
