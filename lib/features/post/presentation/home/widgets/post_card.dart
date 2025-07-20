@@ -12,7 +12,7 @@ class PostCard extends StatelessWidget {
     context.read<UpdatedReactionsPostBloc>().add(
       UpdateReaction(
         idPost: post.id,
-        reactionUser: newReaction == post.reactionUser ? '' : newReaction,
+        reactionUser: newReaction,
         postUpdated: post,
       ),
     );

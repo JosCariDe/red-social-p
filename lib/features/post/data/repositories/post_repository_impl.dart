@@ -117,7 +117,7 @@ class PostRepositoryImpl implements PostRepository {
 
       //? Empieza lógica para editar el db Local.
       final currentReaction = post.reactionUser;
-
+      debugPrint('Reaccion actual del user: ${reactionUser}, reaccion en el DB: ${currentReaction} ');
       if (reactionUser == currentReaction) {
         // User is toggling off their reaction
         if (reactionUser == 'like') {
@@ -144,7 +144,7 @@ class PostRepositoryImpl implements PostRepository {
       }
       await postLocalDataSource.updatePostLocal(post);
       final Post postUpdated = await postLocalDataSource.getOnePostLocalById(idPost);
-      debugPrint('El post tiene: likes: ${postUpdated.reactions.likes}, dislikes: ${postUpdated.reactions.dislikes}');
+      debugPrint('El post tiene: likes: ${postUpdated.reactions.likes}, dislikes: ${postUpdated.reactions.dislikes}, reactionUser In Db: ${postUpdated.reactionUser}\n');
       final List<Post> getPostLocales = await postLocalDataSource.getAllPostLocal();
       getPostLocales.forEach((postLocal) => debugPrint('\nPost Local con id: ${postLocal.id.toString()}'));
       return postUpdated;
