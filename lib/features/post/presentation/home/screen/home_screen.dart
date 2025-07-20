@@ -26,6 +26,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       appBar: const HomeAppBar(),
       floatingActionButton: CreatePostFab(
+        
         onPostCreated: () {
           // Callback personalizado cuando se crea un post
           debugPrint('Post creado desde HomeScreen');
