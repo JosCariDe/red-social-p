@@ -39,29 +39,28 @@ class PostRepositoryImpl implements PostRepository {
 
   @override
   Future<Either<Failure, List<Post>>> getAllPost({int limit = 10, int skip = 0}) {
-    return _handleRequest(() async {
-      final localPosts = await postLocalDataSource.getAllPostLocal();
-      final remotePosts = await postRemoteDataSource.getAllPostRemote(limit: limit, skip: skip);
+  return _handleRequest(() async {
+    List<Post> localPosts = [];
+    if (skip == 0) {
+      localPosts = await postLocalDataSource.getAllPostLocal();
+    }
 
-      //! Cuando se guarda un post de la api remota, entonces con esto aseguramos que no
-      //! se repita el post al llamar este metodo del repositorio, quedará 
+    final remotePosts = await postRemoteDataSource.getAllPostRemote(limit: limit, skip: skip);
 
-      //? Obtener IDs de posts locales
-      final localPostIds = localPosts.map((post) => post.id).toSet();
+    final localPostIds = localPosts.map((post) => post.id).toSet();
 
-      //? Filtrar posts remotos que no esten en locales
-      final uniqueRemotePosts = remotePosts
-          .where((remotePost) => !localPostIds.contains(remotePost.id))
-          .toList();
+    final uniqueRemotePosts = remotePosts
+        .where((remotePost) => !localPostIds.contains(remotePost.id))
+        .toList();
 
-      final mergedPosts = [...localPosts, ...uniqueRemotePosts];
+    final mergedPosts = [...localPosts, ...uniqueRemotePosts];
 
-      //? Ordenar de mayor a menor ID
-      mergedPosts.sort((a, b) => b.id.compareTo(a.id));
+    mergedPosts.sort((a, b) => b.id.compareTo(a.id));
+    mergedPosts.forEach((post) => debugPrint('${post.id.toString()}\n'));
 
-      return mergedPosts;
-    });
-  }
+    return mergedPosts;
+  });
+}
 
   @override
   Future<Either<Failure, List<Post>>> getAllPostsByIdUserLocal(int idUser) {
@@ -146,6 +145,8 @@ class PostRepositoryImpl implements PostRepository {
       await postLocalDataSource.updatePostLocal(post);
       final Post postUpdated = await postLocalDataSource.getOnePostLocalById(idPost);
       debugPrint('El post tiene: likes: ${postUpdated.reactions.likes}, dislikes: ${postUpdated.reactions.dislikes}');
+      final List<Post> getPostLocales = await postLocalDataSource.getAllPostLocal();
+      getPostLocales.forEach((postLocal) => debugPrint('\nPost Local con id: ${postLocal.id.toString()}'));
       return postUpdated;
     });
   }

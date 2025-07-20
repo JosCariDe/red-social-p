@@ -65,12 +65,13 @@ class MainApp extends StatelessWidget {
                   .read<UpdateReactionPostUseCase>(),
             ),
           ),
+          
           BlocProvider<GetPostByIdBloc>(
             create: (context) => GetPostByIdBloc(
               getOnePostByIdUseCase: context.read<GetOnePostByIdUseCase>(),
             ),
-          ),
-        ],
+          ), 
+        ], 
         child: MaterialApp.router(
           routerConfig: appRouter,
           debugShowCheckedModeBanner: false,
