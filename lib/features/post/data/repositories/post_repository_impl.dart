@@ -101,12 +101,24 @@ class PostRepositoryImpl implements PostRepository {
   Future<Either<Failure, bool>> updateReactionPost(int idPost,
       {String reactionUser = ''}) {
     return _handleRequest(() async {
-      final PostModel post =
-          await postLocalDataSource.getOnePostLocalById(idPost);
+      //? El search va a retonar un false o true, nunca un error, ya que se captura con un try
+      final isLocal = await searchPostLocalByID(idPost);
+
+      PostModel post;
+      //? Aquí verificamos si está localmente o si se tiene que guardar localmente
+      if (isLocal.getOrElse(() => false)) {
+        post = await postLocalDataSource.getOnePostLocalById(idPost);
+      } else {
+        final remotePost = await postRemoteDataSource.getPostRemoteById(idPost);
+        await postLocalDataSource.savePostLocal(remotePost);
+        post = await postLocalDataSource.getOnePostLocalById(idPost);
+      }
+
+      //? Empieza lógica para editar el db Local.
       final currentReaction = post.reactionUser;
 
       if (reactionUser == currentReaction) {
-        //? El usuario desactiva su reacción
+        // User is toggling off their reaction
         if (reactionUser == 'like') {
           post.reactions.likes--;
         } else if (reactionUser == 'dislike') {
@@ -114,7 +126,7 @@ class PostRepositoryImpl implements PostRepository {
         }
         post.reactionUser = '';
       } else {
-        //? El usuario cambia su reacción o reacciona por primera vez
+        // User is changing their reaction or reacting for the first time
         if (currentReaction == 'like') {
           post.reactions.likes--;
         } else if (currentReaction == 'dislike') {
