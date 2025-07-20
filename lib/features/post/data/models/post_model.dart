@@ -59,6 +59,7 @@ class PostModel extends Post {
       ),
       views: map['views'],
       userId: map['userId'],
+      reactionUser: map['reactionUser'] ?? '',
     );
   }
 

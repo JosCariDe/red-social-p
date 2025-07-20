@@ -98,7 +98,7 @@ class PostRepositoryImpl implements PostRepository {
   }
   
   @override
-  Future<Either<Failure, bool>> updateReactionPost(int idPost,
+  Future<Either<Failure, Post>> updateReactionPost(int idPost,
       {String reactionUser = ''}) {
     return _handleRequest(() async {
       //? El search va a retonar un false o true, nunca un error, ya que se captura con un try
@@ -113,6 +113,7 @@ class PostRepositoryImpl implements PostRepository {
         await postLocalDataSource.savePostLocal(remotePost);
         post = await postLocalDataSource.getOnePostLocalById(idPost);
       }
+      debugPrint('El post tiene: likes: ${post.reactions.likes}, dislikes: ${post.reactions.dislikes}');
 
       //? Empieza lógica para editar el db Local.
       final currentReaction = post.reactionUser;
@@ -141,9 +142,10 @@ class PostRepositoryImpl implements PostRepository {
           post.reactionUser = 'dislike';
         }
       }
-
       await postLocalDataSource.updatePostLocal(post);
-      return true;
+      final Post postUpdated = await postLocalDataSource.getOnePostLocalById(idPost);
+      debugPrint('El post tiene: likes: ${postUpdated.reactions.likes}, dislikes: ${postUpdated.reactions.dislikes}');
+      return postUpdated;
     });
   }
 

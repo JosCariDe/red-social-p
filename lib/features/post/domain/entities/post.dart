@@ -8,8 +8,9 @@ class Post extends Equatable {
   final Reactions reactions;
   final int views;
   final int userId;
+  String reactionUser;
 
-  const Post({
+  Post({
     required this.id,
     required this.title,
     required this.body,
@@ -17,10 +18,12 @@ class Post extends Equatable {
     required this.reactions,
     required this.views,
     required this.userId,
+    this.reactionUser = '',
   });
-  
+
   @override
-  List<Object?> get props => [id, title, body, tags, reactions, views, userId];
+  List<Object?> get props =>
+      [id, title, body, tags, reactions, views, userId, reactionUser];
 }
 
 class Reactions {
