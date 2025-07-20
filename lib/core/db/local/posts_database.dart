@@ -32,7 +32,8 @@ class PostsDatabase {
         likes INTEGER NOT NULL,
         dislikes INTEGER NOT NULL,
         views INTEGER NOT NULL,
-        userId INTEGER NOT NULL
+        userId INTEGER NOT NULL,
+        reactionUser TEXT
     )
   ''');
   }

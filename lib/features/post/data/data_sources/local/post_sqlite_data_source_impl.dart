@@ -75,4 +75,20 @@ class PostSqliteDataSourceImpl implements PostLocalDataSource {
       throw LocalFailure();
     }
   }
+
+  @override
+  Future<void> updatePostLocal(PostModel post) async {
+    try {
+      final db = await database.database;
+      await db.update(
+        'posts',
+        post.toMap(),
+        where: 'id = ?',
+        whereArgs: [post.id],
+      );
+    } catch (error) {
+      debugPrint('Error al actualizar post localmente: $error');
+      throw LocalFailure();
+    }
+  }
 }

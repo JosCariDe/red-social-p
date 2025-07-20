@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:red_social_prueba/core/errors/failure.dart';
 import 'package:red_social_prueba/features/post/data/data_sources/local/post_local_data_source.dart';
 import 'package:red_social_prueba/features/post/data/data_sources/remote/post_remote_data_source.dart';
+import 'package:red_social_prueba/features/post/data/models/post_model.dart';
 import 'package:red_social_prueba/features/post/domain/entities/post.dart';
 import 'package:red_social_prueba/features/post/domain/repositories/post_repository.dart';
 
@@ -93,6 +94,56 @@ class PostRepositoryImpl implements PostRepository {
     return _handleRequest(() async {
       //final count = await postRemoteDataSource.getCountPostRemote();
       return await postLocalDataSource.savePostLocal(post);
+    });
+  }
+  
+  @override
+  Future<Either<Failure, bool>> updateReactionPost(int idPost,
+      {String reactionUser = ''}) {
+    return _handleRequest(() async {
+      final PostModel post =
+          await postLocalDataSource.getOnePostLocalById(idPost);
+      final currentReaction = post.reactionUser;
+
+      if (reactionUser == currentReaction) {
+        //? El usuario desactiva su reacción
+        if (reactionUser == 'like') {
+          post.reactions.likes--;
+        } else if (reactionUser == 'dislike') {
+          post.reactions.dislikes--;
+        }
+        post.reactionUser = '';
+      } else {
+        //? El usuario cambia su reacción o reacciona por primera vez
+        if (currentReaction == 'like') {
+          post.reactions.likes--;
+        } else if (currentReaction == 'dislike') {
+          post.reactions.dislikes--;
+        }
+
+        if (reactionUser == 'like') {
+          post.reactions.likes++;
+          post.reactionUser = 'like';
+        } else if (reactionUser == 'dislike') {
+          post.reactions.dislikes++;
+          post.reactionUser = 'dislike';
+        }
+      }
+
+      await postLocalDataSource.updatePostLocal(post);
+      return true;
+    });
+  }
+
+  @override
+  Future<Either<Failure, bool>> searchPostLocalByID(int idPost) {
+    return _handleRequest(() async {
+      try {
+        await postLocalDataSource.getOnePostLocalById(idPost);
+        return true;
+      } catch (e) {
+        return false;
+      }
     });
   }
 }

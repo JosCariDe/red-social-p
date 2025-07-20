@@ -4,6 +4,9 @@ import 'package:red_social_prueba/features/post/data/models/reactions_model.dart
 import 'package:red_social_prueba/features/post/domain/entities/post.dart';
 
 class PostModel extends Post {
+
+  String reactionUser;
+
   PostModel({
     required super.id,
     required super.title,
@@ -12,6 +15,7 @@ class PostModel extends Post {
     required super.reactions,
     required super.views,
     required super.userId,
+    this.reactionUser = '',
   });
 
   factory PostModel.fromJson(Map<String, dynamic> json) {
@@ -37,6 +41,7 @@ class PostModel extends Post {
       'dislikes': reactions.dislikes,
       'views': views,
       'userId': userId,
+      'reactionUser': reactionUser
     };
   }
 
