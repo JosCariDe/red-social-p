@@ -9,6 +9,7 @@ import 'package:red_social_prueba/features/post/domain/uses_cases/update_reactio
 import 'package:red_social_prueba/features/post/presentation/create_post/blocs/create_post_bloc/create_post_bloc.dart';
 import 'package:red_social_prueba/features/post/presentation/home/blocs/updated_reactions_post/updated_reactions_post_bloc.dart';
 import 'package:red_social_prueba/features/post/presentation/post_detail/blocs/get_one_post_by_id/get_post_by_id_bloc.dart';
+import 'package:red_social_prueba/features/post/presentation/posts_user/blocs/user_posts_bloc/user_posts_bloc.dart';
 import 'package:red_social_prueba/features/user/data/data_sources/local/user_local_data_source.dart';
 import 'package:red_social_prueba/features/user/data/data_sources/local/user_shared_preference_data_source_impl.dart';
 import 'package:red_social_prueba/features/user/data/repositories/user_repository_impl.dart';
@@ -96,4 +97,5 @@ Future<void> init() async {
       userId: 0, // valor dummy, lo sobreescribes en la ruta
     ),
   );
+  sl.registerFactory(() => UserPostsBloc(getAllPostByIdUserLocalUseCase: sl()));
 }

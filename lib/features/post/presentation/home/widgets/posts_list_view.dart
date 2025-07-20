@@ -5,13 +5,16 @@ import 'package:red_social_prueba/features/post/presentation/home/blocs/get_all_
 import 'package:red_social_prueba/features/post/presentation/home/blocs/get_all_posts/get_all_posts_event.dart';
 import 'package:red_social_prueba/features/post/presentation/home/blocs/get_all_posts/get_all_posts_state.dart';
 import 'package:red_social_prueba/features/post/presentation/home/widgets/post_card.dart';
+import 'package:red_social_prueba/features/post/domain/entities/post.dart';
 
 class PostsListView extends StatefulWidget {
-  final Function()? onPostTap;
+  final List<Post>? posts; // Nueva propiedad opcional
+  final Function(Post)? onPostTap;
   final bool enableInfiniteScroll;
   
   const PostsListView({
     super.key,
+    this.posts,
     this.onPostTap,
     this.enableInfiniteScroll = true,
   });
@@ -39,6 +42,21 @@ class _PostsListViewState extends State<PostsListView> {
 
   @override
   Widget build(BuildContext context) {
+    if (widget.posts != null) {
+      if (widget.posts!.isEmpty) {
+        return const Center(child: Text('No posts found'));
+      }
+      return ListView.builder(
+        itemCount: widget.posts!.length,
+        itemBuilder: (context, index) {
+          final post = widget.posts![index];
+          return GestureDetector(
+            onTap: () => widget.onPostTap?.call(post),
+            child: PostCard(post: post),
+          );
+        },
+      );
+    }
     return BlocBuilder<GetAllPostsBloc, GetAllPostsState>(
       builder: (context, state) {
         if (state is GetAllPostsInitial ||
@@ -75,7 +93,7 @@ class _PostsListViewState extends State<PostsListView> {
                     context.read<GetAllPostsBloc>().add(ReloadPosts());
                   }
                   // Llamar callback personalizado si existe
-                  widget.onPostTap?.call();
+                  widget.onPostTap?.call(post);
                 },
                 child: PostCard(post: post),
               );

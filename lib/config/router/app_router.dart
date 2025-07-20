@@ -71,5 +71,10 @@ final appRouter = GoRouter(
         );
       },
     ),
+
+    GoRoute(
+      path: '/my-posts',
+      builder: (context, state) => const UserPostsScreen(),
+    ),
   ],
 );
