@@ -10,12 +10,12 @@ class PostCard extends StatelessWidget {
 
   void _handleReaction(BuildContext context, String newReaction) {
     context.read<UpdatedReactionsPostBloc>().add(
-          UpdateReaction(
-            idPost: post.id,
-            reactionUser: newReaction == post.reactionUser ? '' : newReaction,
-            postUpdated: post,
-          ),
-        );
+      UpdateReaction(
+        idPost: post.id,
+        reactionUser: newReaction == post.reactionUser ? '' : newReaction,
+        postUpdated: post,
+      ),
+    );
   }
 
   @override
@@ -23,85 +23,68 @@ class PostCard extends StatelessWidget {
     final textTheme = Theme.of(context).textTheme;
     final colorScheme = Theme.of(context).colorScheme;
 
-    return BlocBuilder<UpdatedReactionsPostBloc, UpdatedReactionsPostState>(
-      buildWhen: (prev, curr) {
-        // Solo reconstruye si el post actualizado es este
-        if (curr is UpdatedReactionsPostSuccess) {
-          return curr.post.id == post.id;
-        }
-        return false;
-      },
-      builder: (context, state) {
-        final currentPost = state is UpdatedReactionsPostSuccess
-            ? state.post
-            : post;
-
-        return Card(
-          margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          elevation: 4,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-            side: BorderSide(
-              color: colorScheme.onSurface.withOpacity(0.1),
-            ),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+    return Card(
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      elevation: 4,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+        side: BorderSide(
+          color: colorScheme.onSurface.withOpacity(0.1),
+        ),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(post.title, style: textTheme.titleLarge),
+            const SizedBox(height: 8),
+            Text(post.body, style: textTheme.bodyMedium),
+            const SizedBox(height: 16),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(currentPost.title, style: textTheme.titleLarge),
-                const SizedBox(height: 8),
-                Text(currentPost.body, style: textTheme.bodyMedium),
-                const SizedBox(height: 16),
+                Text(
+                  'ID: ${post.id}',
+                  style: textTheme.bodySmall?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: colorScheme.onSurface.withOpacity(0.6),
+                  ),
+                ),
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      'ID: ${currentPost.id}',
-                      style: textTheme.bodySmall?.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: colorScheme.onSurface.withOpacity(0.6),
-                      ),
+                    ReactionIcon(
+                      isActive: post.reactionUser == 'like',
+                      iconActive: Icons.thumb_up_alt,
+                      iconInactive: Icons.thumb_up_alt_outlined,
+                      color: colorScheme.primary,
+                      onTap: () => _handleReaction(context, 'like'),
                     ),
-                    Row(
-                      children: [
-                        ReactionIcon(
-                          isActive: currentPost.reactionUser == 'like',
-                          iconActive: Icons.thumb_up_alt,
-                          iconInactive: Icons.thumb_up_alt_outlined,
-                          color: colorScheme.primary,
-                          onTap: () =>
-                              _handleReaction(context, 'like'),
-                        ),
-                        const SizedBox(width: 4),
-                        Text(
-                          currentPost.reactions.likes.toString(),
-                          style: textTheme.bodyMedium,
-                        ),
-                        const SizedBox(width: 16),
-                        ReactionIcon(
-                          isActive: currentPost.reactionUser == 'dislike',
-                          iconActive: Icons.thumb_down_alt,
-                          iconInactive: Icons.thumb_down_alt_outlined,
-                          color: colorScheme.error,
-                          onTap: () =>
-                              _handleReaction(context, 'dislike'),
-                        ),
-                        const SizedBox(width: 4),
-                        Text(
-                          currentPost.reactions.dislikes.toString(),
-                          style: textTheme.bodyMedium,
-                        ),
-                      ],
+                    const SizedBox(width: 4),
+                    Text(
+                      post.reactions.likes.toString(),
+                      style: textTheme.bodyMedium,
+                    ),
+                    const SizedBox(width: 16),
+                    ReactionIcon(
+                      isActive: post.reactionUser == 'dislike',
+                      iconActive: Icons.thumb_down_alt,
+                      iconInactive: Icons.thumb_down_alt_outlined,
+                      color: colorScheme.error,
+                      onTap: () => _handleReaction(context, 'dislike'),
+                    ),
+                    const SizedBox(width: 4),
+                    Text(
+                      post.reactions.dislikes.toString(),
+                      style: textTheme.bodyMedium,
                     ),
                   ],
                 ),
               ],
             ),
-          ),
-        );
-      },
+          ],
+        ),
+      ),
     );
   }
 }

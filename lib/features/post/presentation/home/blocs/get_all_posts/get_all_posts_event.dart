@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:red_social_prueba/features/post/domain/entities/post.dart';
 
 abstract class GetAllPostsEvent extends Equatable {
   const GetAllPostsEvent();
@@ -15,4 +16,12 @@ class GetAllPosts extends GetAllPostsEvent {
 
   @override
   List<Object> get props => [limit, skip];
+}
+
+class UpdatePostInList extends GetAllPostsEvent {
+  final Post updatedPost;
+  const UpdatePostInList(this.updatedPost);
+
+  @override
+  List<Object> get props => [updatedPost];
 }

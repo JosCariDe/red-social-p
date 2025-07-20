@@ -10,6 +10,15 @@ class GetAllPostsBloc extends Bloc<GetAllPostsEvent, GetAllPostsState> {
   GetAllPostsBloc({required this.getAllPostUseCase})
     : super(GetAllPostsInitial()) {
     on<GetAllPosts>(_onGetAllPosts);
+    on<UpdatePostInList>((event, emit) {
+      final currentState = state;
+      if (currentState is GetAllPostsSuccess) {
+        final updatedPosts = currentState.posts.map((post) =>
+          post.id == event.updatedPost.id ? event.updatedPost : post
+        ).toList();
+        emit(currentState.copyWith(posts: updatedPosts));
+      }
+    });
   }
 
   Future<void> _onGetAllPosts(
