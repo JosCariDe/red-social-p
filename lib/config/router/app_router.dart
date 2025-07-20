@@ -47,5 +47,13 @@ final appRouter = GoRouter(
         );
       },
     ),
+
+    GoRoute(
+  path: '/create-post',
+  builder: (context, state) => BlocProvider(
+    create: (_) => sl<CreatePostBloc>(),
+    child: const CreatePostScreen(),
+  ),
+),
   ],
 );

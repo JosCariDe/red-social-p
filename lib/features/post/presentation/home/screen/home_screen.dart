@@ -47,6 +47,10 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         // ... resto del AppBar ...
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => context.push('/create-post'),
+        child: const Icon(Icons.add),
+      ),
       body: BlocListener<UpdatedReactionsPostBloc, UpdatedReactionsPostState>(
         listener: (context, state) {
           if (state is UpdatedReactionsPostSuccess) {
