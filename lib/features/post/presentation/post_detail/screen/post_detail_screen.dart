@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:red_social_prueba/features/post/domain/entities/post.dart';
 import 'package:red_social_prueba/features/post/presentation/home/blocs/updated_reactions_post/updated_reactions_post_bloc.dart';
 import 'package:red_social_prueba/features/post/presentation/post_detail/blocs/get_one_post_by_id/get_post_by_id_bloc.dart';
@@ -17,6 +18,7 @@ class PostDetailScreen extends StatefulWidget {
 
 class _PostDetailScreenState extends State<PostDetailScreen> {
   static final Map<int, int> _comentariosPorPost = {};
+  bool flagEditReactionAux = false;
 
   int _getComentariosParaPost(int postId) {
     if (!_comentariosPorPost.containsKey(postId)) {
@@ -34,6 +36,7 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
   }
 
   void _handleReaction(BuildContext context, Post post, String newReaction) {
+    flagEditReactionAux = true;
     context.read<UpdatedReactionsPostBloc>().add(
       UpdateReaction(
         idPost: post.id,
@@ -50,7 +53,14 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
     final comentarios = _getComentariosParaPost(widget.idPost);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Detalle del Post')),
+      appBar: AppBar(
+        title: const Text('Detalle del Post'),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+         //? Para saber si hizo alguna reaccion en el post, para actualizar despues en home
+          onPressed: () => flagEditReactionAux ? context.pop(true) : context.pop(false),
+        ),
+      ),
       body: BlocListener<UpdatedReactionsPostBloc, UpdatedReactionsPostState>(
         listener: (context, state) {
           if (state is UpdatedReactionsPostSuccess) {

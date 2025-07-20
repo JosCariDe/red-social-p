@@ -86,8 +86,11 @@ class _HomeScreenState extends State<HomeScreen> {
                   }
                   final post = state.posts[index];
                   return GestureDetector(
-                    onTap: () {
-                      context.push('/posts/${post.id}');
+                    onTap: () async {
+                      final result = await context.push('/posts/${post.id}');
+                      if (result == true) {
+                        context.read<GetAllPostsBloc>().add(ReloadPosts());
+                      }
                     },
                     child: PostCard(post: post),
                   );
