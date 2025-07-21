@@ -1,9 +1,6 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 import 'package:red_social_prueba/di/injection.dart';
-import 'package:red_social_prueba/features/post/presentation/home/widgets/posts_list_view.dart';
 import 'package:red_social_prueba/features/post/presentation/posts_user/blocs/user_posts_bloc/user_posts_bloc.dart';
 import 'package:red_social_prueba/features/post/presentation/posts_user/widgets/user_posts_list_view.dart';
 import 'package:red_social_prueba/features/user/presentation/login/blocs/auth_user_bloc/auth_user_bloc.dart';

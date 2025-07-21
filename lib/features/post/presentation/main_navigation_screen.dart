@@ -17,7 +17,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
     HomeScreen(),
     UserPostsScreen(),
     LogoutScreen()
-    // FavoritesScreen(), // Para el futuro
+    //? FavoritesScreen() Para el futuro
   ];
 
   @override
