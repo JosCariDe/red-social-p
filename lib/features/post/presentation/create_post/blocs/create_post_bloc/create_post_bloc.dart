@@ -4,7 +4,6 @@ import 'package:red_social_prueba/features/post/domain/entities/post.dart';
 import 'package:red_social_prueba/features/post/domain/uses_cases/get_all_post_by_id_user_local_use_case.dart';
 import 'package:red_social_prueba/features/post/domain/uses_cases/get_count_post_use_case.dart';
 import 'package:red_social_prueba/features/post/domain/uses_cases/save_post_local_use_case.dart';
-import 'package:red_social_prueba/features/user/domain/entities/user.dart';
 
 part 'create_post_event.dart';
 part 'create_post_state.dart';

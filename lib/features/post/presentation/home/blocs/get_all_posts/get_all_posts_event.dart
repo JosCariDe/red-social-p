@@ -27,3 +27,4 @@ class UpdatePostInList extends GetAllPostsEvent {
 }
 
 class ReloadPosts extends GetAllPostsEvent {}
+class ResetPosts extends GetAllPostsEvent {}

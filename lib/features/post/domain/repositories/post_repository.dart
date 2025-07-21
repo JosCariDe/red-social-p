@@ -11,4 +11,5 @@ abstract class PostRepository {
   Future<Either<Failure, bool>> savePostLocal(Post post);
   Future<Either<Failure, Post>> updateReactionPost(int idPost, {String reactionUser = '' });
   Future<Either<Failure, bool>> searchPostLocalByID(int idPost);
+  Future<Either<Failure, void>> clearLocalPosts();
 }

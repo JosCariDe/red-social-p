@@ -38,34 +38,44 @@ class PostRepositoryImpl implements PostRepository {
   }
 
   @override
-  Future<Either<Failure, List<Post>>> getAllPost({int limit = 10, int skip = 0}) {
-  return _handleRequest(() async {
-    List<Post> localPosts = [];
-    if (skip == 0) {
-      localPosts = await postLocalDataSource.getAllPostLocal();
-    }
+  Future<Either<Failure, List<Post>>> getAllPost({
+    int limit = 10,
+    int skip = 0,
+  }) {
+    return _handleRequest(() async {
+      List<Post> localPosts = [];
+      if (skip == 0) {
+        localPosts = await postLocalDataSource.getAllPostLocal();
+      }
 
-    final remotePosts = await postRemoteDataSource.getAllPostRemote(limit: limit, skip: skip);
+      final remotePosts = await postRemoteDataSource.getAllPostRemote(
+        limit: limit,
+        skip: skip,
+      );
 
-    final localPostIds = localPosts.map((post) => post.id).toSet();
+      final localPostIds = localPosts.map((post) => post.id).toSet();
 
-    final uniqueRemotePosts = remotePosts
-        .where((remotePost) => !localPostIds.contains(remotePost.id))
-        .toList();
+      final uniqueRemotePosts = remotePosts
+          .where((remotePost) => !localPostIds.contains(remotePost.id))
+          .toList();
 
-    final mergedPosts = [...localPosts, ...uniqueRemotePosts];
+      final mergedPosts = [...localPosts, ...uniqueRemotePosts];
 
-    mergedPosts.sort((a, b) => b.id.compareTo(a.id));
-    mergedPosts.forEach((post) => debugPrint('${post.id.toString()}\n'));
+      mergedPosts.sort((a, b) => b.id.compareTo(a.id));
+      mergedPosts.forEach((post) => debugPrint('${post.id.toString()}\n'));
 
-    return mergedPosts;
-  });
-}
+      return mergedPosts;
+    });
+  }
 
   @override
   Future<Either<Failure, List<Post>>> getAllPostsByIdUserLocal(int idUser) {
     return _handleRequest(() async {
-      return await postLocalDataSource.getAllPostsLocalByIdUser(idUser);
+      final res = await postLocalDataSource.getAllPostsLocalByIdUser(idUser);
+      for (var postLocal in res) {
+        debugPrint('Post Local con el id: ${postLocal.id}');
+      }
+      return res;
     });
   }
 
@@ -96,10 +106,12 @@ class PostRepositoryImpl implements PostRepository {
       return await postLocalDataSource.savePostLocal(post);
     });
   }
-  
+
   @override
-  Future<Either<Failure, Post>> updateReactionPost(int idPost,
-      {String reactionUser = ''}) {
+  Future<Either<Failure, Post>> updateReactionPost(
+    int idPost, {
+    String reactionUser = '',
+  }) {
     return _handleRequest(() async {
       //? El search va a retonar un false o true, nunca un error, ya que se captura con un try
       final isLocal = await searchPostLocalByID(idPost);
@@ -113,11 +125,15 @@ class PostRepositoryImpl implements PostRepository {
         await postLocalDataSource.savePostLocal(remotePost);
         post = await postLocalDataSource.getOnePostLocalById(idPost);
       }
-      debugPrint('El post tiene: likes: ${post.reactions.likes}, dislikes: ${post.reactions.dislikes}');
+      debugPrint(
+        'El post tiene: likes: ${post.reactions.likes}, dislikes: ${post.reactions.dislikes}',
+      );
 
       //? Empieza lógica para editar el db Local.
       final currentReaction = post.reactionUser;
-      debugPrint('Reaccion actual del user: ${reactionUser}, reaccion en el DB: ${currentReaction} ');
+      debugPrint(
+        'Reaccion actual del user: ${reactionUser}, reaccion en el DB: ${currentReaction} ',
+      );
       if (reactionUser == currentReaction) {
         // User is toggling off their reaction
         if (reactionUser == 'like') {
@@ -143,10 +159,18 @@ class PostRepositoryImpl implements PostRepository {
         }
       }
       await postLocalDataSource.updatePostLocal(post);
-      final Post postUpdated = await postLocalDataSource.getOnePostLocalById(idPost);
-      debugPrint('El post tiene: likes: ${postUpdated.reactions.likes}, dislikes: ${postUpdated.reactions.dislikes}, reactionUser In Db: ${postUpdated.reactionUser}\n');
-      final List<Post> getPostLocales = await postLocalDataSource.getAllPostLocal();
-      getPostLocales.forEach((postLocal) => debugPrint('\nPost Local con id: ${postLocal.id.toString()}'));
+      final Post postUpdated = await postLocalDataSource.getOnePostLocalById(
+        idPost,
+      );
+      debugPrint(
+        'El post tiene: likes: ${postUpdated.reactions.likes}, dislikes: ${postUpdated.reactions.dislikes}, reactionUser In Db: ${postUpdated.reactionUser}\n',
+      );
+      final List<Post> getPostLocales = await postLocalDataSource
+          .getAllPostLocal();
+      getPostLocales.forEach(
+        (postLocal) =>
+            debugPrint('\nPost Local con id: ${postLocal.id.toString()}'),
+      );
       return postUpdated;
     });
   }
@@ -160,6 +184,13 @@ class PostRepositoryImpl implements PostRepository {
       } catch (e) {
         return false;
       }
+    });
+  }
+
+  @override
+  Future<Either<Failure, void>> clearLocalPosts() {
+    return _handleRequest(() async {
+      await postLocalDataSource.clearAllPostsLocal();
     });
   }
 }

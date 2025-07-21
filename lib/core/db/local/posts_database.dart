@@ -21,9 +21,20 @@ class PostsDatabase {
     final path = '$databasePath/Posts.db';
 
     // SOLO EN DESARROLLO: eliminar la base vieja que no tiene reactionUser
-    await deleteDatabase(path);
+    //await deleteDatabase(path);
 
     return await openDatabase(path, version: 1, onCreate: _createDatabase);
+  }
+
+  Future<void> clearAllPosts() async {
+    if (_database != null) {
+      await _database!.close();
+      _database = null;
+    }
+    final databasePath = await getDatabasesPath();
+    final path = '$databasePath/Posts.db';
+    await deleteDatabase(path);
+    await _initDatabase();
   }
 
   Future<void> _createDatabase(Database db, int version) async {

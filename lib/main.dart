@@ -11,6 +11,7 @@ void main() async {
   await di.init();
   runApp(
     BlocProvider(
+      //? Bloc Global para tener siempre el user em todo el arbol de widgets.
       create: (_) => di.sl<AuthUserBloc>(),
       child: const MainApp(),
     ),

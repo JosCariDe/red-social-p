@@ -1,16 +1,44 @@
-# red_social_prueba
+# Red Social Prueba
 
-A new Flutter project.
+Una aplicación de red social hecha en Flutter.
 
-## Getting Started
+## Requisitos
 
-This project is a starting point for a Flutter application.
+- **Flutter SDK**: >=3.10.0 (recomendado)
+- **Dart SDK**: Incluido con Flutter
+- **Android Studio** o **VS Code** (con extensiones de Flutter y Dart)
+- **Emulador o dispositivo físico** (Android/iOS)
 
-A few resources to get you started if this is your first Flutter project:
+## Instalación y ejecución
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+1. **Clona el repositorio:**
+   ```bash
+   git clone https://github.com/JosCariDe/red-social-p
+   cd red_social_p
+   ```
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+2. **Instala las dependencias:**
+   ```bash
+   flutter pub get
+   ```
+
+3. **Ejecuta la app:**
+   - **Android:**
+     ```bash
+     flutter run -d android
+     ```
+
+
+
+## Notas
+- Asegúrate de tener un emulador o dispositivo conectado antes de ejecutar `flutter run`.
+- Si tienes problemas con dependencias, ejecuta `flutter pub get` nuevamente.
+- Puedes cambiar el dispositivo de destino con `flutter devices` y luego `flutter run -d <deviceId>`.
+
+## Recursos útiles
+- [Documentación oficial de Flutter](https://docs.flutter.dev/)
+- [Instalación de Flutter](https://docs.flutter.dev/get-started/install)
+- [Solución de problemas comunes](https://docs.flutter.dev/get-started/test-drive?tab=terminal#troubleshooting)
+
+---
+¡Listo! Ahora puedes empezar a desarrollar y probar la app 🚀

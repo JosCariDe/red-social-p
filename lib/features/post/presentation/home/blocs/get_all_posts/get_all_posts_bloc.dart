@@ -31,6 +31,9 @@ class GetAllPostsBloc extends Bloc<GetAllPostsEvent, GetAllPostsState> {
         (posts) => emit(GetAllPostsSuccess(posts: posts, limitReached: false)),
       );
     });
+    on<ResetPosts>((event, emit) {
+      emit(GetAllPostsInitial());
+    });
   }
 
   Future<void> _onGetAllPosts(

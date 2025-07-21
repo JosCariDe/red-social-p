@@ -7,4 +7,5 @@ abstract class PostLocalDataSource {
   Future<List<PostModel>> getAllPostsLocalByIdUser(int userId);
   Future<PostModel> getOnePostLocalById(int idPost);
   Future<void> updatePostLocal(PostModel post);
+  Future<void> clearAllPostsLocal();
 }

@@ -18,8 +18,6 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
-
     return BlocListener<CreatePostBloc, CreatePostState>(
       listener: (context, state) {
         if (state is CreatePostSuccess) {
@@ -28,9 +26,9 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
             const SnackBar(content: Text('¡Post creado exitosamente!')),
           );
         } else if (state is CreatePostFailure) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(state.message)),
-          );
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(state.message)));
         }
       },
       child: Scaffold(
@@ -58,27 +56,37 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                 const SizedBox(height: 16),
                 TextFormField(
                   controller: _tagsController,
-                  decoration: const InputDecoration(labelText: 'Tags (separados por coma)'),
+                  decoration: const InputDecoration(
+                    labelText: 'Tags (separados por coma)',
+                  ),
                 ),
                 const SizedBox(height: 32),
                 BlocBuilder<CreatePostBloc, CreatePostState>(
                   builder: (context, state) {
                     return ElevatedButton(
+                      style: ButtonStyle(
+                        padding: MaterialStateProperty.all(
+                          const EdgeInsets.symmetric(
+                            horizontal: 32,
+                            vertical: 16,
+                          ),
+                        ),
+                      ),
                       onPressed: state is CreatePostLoading
                           ? null
                           : () {
                               if (_formKey.currentState!.validate()) {
                                 context.read<CreatePostBloc>().add(
-                                      CreatePostSubmitted(
-                                        title: _titleController.text.trim(),
-                                        body: _bodyController.text.trim(),
-                                        tags: _tagsController.text
-                                            .split(',')
-                                            .map((e) => e.trim())
-                                            .where((e) => e.isNotEmpty)
-                                            .toList(),
-                                      ),
-                                    );
+                                  CreatePostSubmitted(
+                                    title: _titleController.text.trim(),
+                                    body: _bodyController.text.trim(),
+                                    tags: _tagsController.text
+                                        .split(',')
+                                        .map((e) => e.trim())
+                                        .where((e) => e.isNotEmpty)
+                                        .toList(),
+                                  ),
+                                );
                               }
                             },
                       child: state is CreatePostLoading
