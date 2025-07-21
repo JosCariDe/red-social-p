@@ -27,18 +27,7 @@ Una aplicación de red social hecha en Flutter.
      ```bash
      flutter run -d android
      ```
-   - **iOS:**
-     ```bash
-     flutter run -d ios
-     ```
-   - **Web:**
-     ```bash
-     flutter run -d chrome
-     ```
-   - **Windows/Linux/MacOS:**
-     ```bash
-     flutter run -d windows # o linux, macos
-     ```
+
 
 
 ## Notas
