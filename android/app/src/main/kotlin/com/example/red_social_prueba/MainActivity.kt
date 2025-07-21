@@ -1,4 +1,4 @@
-package com.example.test_proyect_v1
+package com.example.red_social_prueba
 
 import io.flutter.embedding.android.FlutterActivity
 
