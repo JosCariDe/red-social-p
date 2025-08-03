@@ -8,5 +8,8 @@ abstract class UserRepository {
   Future<Either<Failure, bool>> saveUser(String email, String password);
   Future<Either<Failure, bool>> deleteUser(int id);
   Future<Either<Failure, User>> getUser(int id);
+  Future<Either<Failure, List<User>>> getAllUser();
+  Future<Either<Failure, bool>> deleteAllUsers();
+  
 
 } 

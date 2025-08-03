@@ -19,29 +19,50 @@ class _LoginScreenState extends State<LoginScreen> {
   final _passwordController = TextEditingController();
 
   @override
+  void initState() {
+    super.initState();
+    // Al iniciar la pantalla, verificamos si ya hay un usuario logueado
+    context.read<AuthUserBloc>().add(VerifiedUserLogging());
+  }
+
+  @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
 
     return BlocProvider(
       create: (_) => sl<LoginBloc>(),
-      child: BlocListener<LoginBloc, LoginState>(
-        listener: (context, state) {
-          if (state is LoginSuccess) {
-            // Navega a posts y pasa el usuario (puedes guardar en un provider global si lo prefieres)
-            final user = User(
-              id: state.userId,
-              email: state.username,
-              password: state.password,
-            );
-            context.read<AuthUserBloc>().add(AuthUserLoggedIn(user: user));
-            context.go('/posts');
-            // Aquí podrías guardar el usuario en un provider/bloc global para mostrarlo en el AppBar
-          } else if (state is LoginFailure) {
-            ScaffoldMessenger.of(
-              context,
-            ).showSnackBar(SnackBar(content: Text(state.message)));
-          }
-        },
+      child: MultiBlocListener(
+        listeners: [
+          // Listener para reaccionar a los cambios de estado de la autenticación
+          BlocListener<AuthUserBloc, AuthUserState>(
+            listener: (context, state) {
+              if (state is AuthUserAuthenticated) {
+                debugPrint(
+                    'Usuario autenticado (ID: ${state.user.id}), navegando a /posts');
+                context.go('/posts');
+              }
+            },
+          ),
+          // Listener para reaccionar al resultado del formulario de login
+          BlocListener<LoginBloc, LoginState>(
+            listener: (context, state) {
+              if (state is LoginSuccess) {
+                // Si el login es exitoso, le informamos al AuthUserBloc
+                // El listener de AuthUserBloc se encargará de la navegación
+                final user = User(
+                  id: state.userId,
+                  email: state.username,
+                  password: state.password,
+                );
+                context.read<AuthUserBloc>().add(AuthUserLoggedIn(user: user));
+              } else if (state is LoginFailure) {
+                // Si el login falla, mostramos un error
+                ScaffoldMessenger.of(context)
+                    .showSnackBar(SnackBar(content: Text(state.message)));
+              }
+            },
+          ),
+        ],
         child: Scaffold(
           body: Center(
             child: SingleChildScrollView(

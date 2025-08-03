@@ -56,4 +56,18 @@ class UserRepositoryImpl implements UserRepository {
       );
     });
   }
+  
+  @override
+  Future<Either<Failure, List<User>>> getAllUser() {
+    return _handleRequest(()async {
+      return userLocalDataSource.getAllUser();
+    },);
+  }
+  
+  @override
+  Future<Either<Failure, bool>> deleteAllUsers() {
+    return _handleRequest(()async {
+      return userLocalDataSource.deleteAllUsers();
+    },);
+  }
 }

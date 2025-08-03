@@ -1,6 +1,8 @@
 import 'package:get_it/get_it.dart';
 import 'package:red_social_prueba/config/exports/exports_data.dart';
 import 'package:red_social_prueba/core/db/local/posts_database.dart';
+import 'package:red_social_prueba/features/user/domain/uses_cases/delete_all_user_case.dart';
+import 'package:red_social_prueba/features/user/domain/uses_cases/get_all_user_use_case.dart';
 
 import 'barril_dependencias.dart';
 
@@ -67,9 +69,16 @@ Future<void> init() async {
     () => DeleteUserCase(userRepository: sl()),
   );
 
+  sl.registerLazySingleton<DeleteAllUserCase>(
+    () => DeleteAllUserCase(userRepository: sl()),
+  );
+
+  sl.registerLazySingleton<GetAllUserUseCase>(
+    () => GetAllUserUseCase(userRepository: sl()),
+  );
   // Blocs
   //? GLOBAL:
-  sl.registerLazySingleton(() => AuthUserBloc());
+  sl.registerLazySingleton(() => AuthUserBloc(getAllUserUseCase: sl()));
   //? OTROS
   sl.registerFactory(() => GetAllPostsBloc(getAllPostUseCase: sl()));
   sl.registerFactory(
@@ -86,5 +95,5 @@ Future<void> init() async {
     ),
   );
   sl.registerFactory(() => UserPostsBloc(getAllPostByIdUserLocalUseCase: sl()));
-  sl.registerFactory(() => LogoutBloc(deletePostsLocalUseCase: sl()));
+  sl.registerFactory(() => LogoutBloc(deletePostsLocalUseCase: sl(), deleteAllUserCase: sl()));
 }

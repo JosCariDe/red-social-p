@@ -19,3 +19,5 @@ class AuthUserLoggedIn extends AuthUserEvent{
 }
 
 class AuthUserLoggedOut extends AuthUserEvent {}
+
+class VerifiedUserLogging extends AuthUserEvent {}
